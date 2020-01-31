@@ -39,7 +39,7 @@ public class CIServer {
         });
     }
 
-        /**
+    /**
      * Parse a HttpServletRequest into JSONObject
      * @param request POST request
      * @return JSONObject parsed request
@@ -104,6 +104,19 @@ public class CIServer {
         if(file.exists()){
             FileUtils.deleteDirectory(file);
         }
+    }
+
+    /**
+     * Extracts relevant info from the parsed data.
+     * @param JSONObject git post request
+     * @return JSONObject relevant data
+     */
+    public JSONObject getRelevantRequestData(JSONObject data) {
+        JSONObject new_data = new JSONObject();
+        JSONObject repository = (JSONObject) data.get("repository");
+        new_data.append("ssh_url", repository.get("ssh_url"));
+        new_data.append("sha", data.get("after"));
+        return new_data;
     }
  
 }
