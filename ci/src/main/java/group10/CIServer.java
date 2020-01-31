@@ -20,7 +20,7 @@ import org.json.*;
 public class CIServer extends AbstractHandler
 {
     /**
-     * Parse a HttpServletRequest into JSONObject
+     * Parse a HttpServletRequest into JSONObject.
      * @param request POST request
      * @return JSONObject parsed request
      * @throws IOException
@@ -40,6 +40,19 @@ public class CIServer extends AbstractHandler
         }
     }
 
+    /**
+     * Extracts relevant info from the parsed data.
+     * @param JSONObject git post request
+     * @return JSONObject relevant data
+     */
+    public JSONObject getRelevantRequestData(JSONObject data) {
+        JSONObject new_data = new JSONObject();
+        JSONObject repository = (JSONObject) data.get("repository");
+        new_data.append("ssh_url", repository.get("ssh_url"));
+        new_data.append("sha", data.get("after"));
+        return new_data;
+    }
+
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -51,13 +64,14 @@ public class CIServer extends AbstractHandler
         baseRequest.setHandled(true);
 
         JSONObject body = parseRequest(request);
+        JSONObject good_bod = getRelevantRequestData(body);
+        System.out.println(good_bod.toString());
 
         // here you do all the continuous integration tasks
         // for example
         // 1st clone your repository
         // 2nd compile the code
-
-        response.getWriter().println("CI job done");
+        response.getWriter().println("good jobs");
     }
  
     // used to start the CI server in command line
