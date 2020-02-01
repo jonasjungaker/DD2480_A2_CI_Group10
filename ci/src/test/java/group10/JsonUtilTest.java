@@ -26,6 +26,18 @@ public class JsonUtilTest {
     }
 
     /**
+     * Parse a short string and check that
+     * the values are correct.
+     */
+    @Test
+    public void parseExamleString() {
+        String hello = "{\"test\":\"abc\"}";
+        JSONObject data = json.toMap(hello);
+        assertEquals("{\"test\":\"abc\"}", data.toString());
+        assertEquals("abc", data.get("test"));
+    }
+
+    /**
      * Parse empty string
      */
     @Test
