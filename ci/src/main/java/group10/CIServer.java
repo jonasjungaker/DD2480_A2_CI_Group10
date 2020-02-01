@@ -114,8 +114,10 @@ public class CIServer {
     public JSONObject getRelevantRequestData(JSONObject data) {
         JSONObject new_data = new JSONObject();
         JSONObject repository = (JSONObject) data.get("repository");
-        new_data.append("ssh_url", repository.get("ssh_url"));
-        new_data.append("sha", data.get("after"));
+        System.out.println(repository.get("ssh_url"));
+        new_data.put("ssh_url", repository.get("ssh_url"));
+        new_data.put("sha", data.get("after"));
+        new_data.put("full_name", repository.get("full_name"));
         return new_data;
     }
  
