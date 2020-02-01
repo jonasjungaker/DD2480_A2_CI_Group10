@@ -6,9 +6,19 @@ import javax.servlet.ServletException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.jetty.server.Server;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.*;
@@ -48,8 +58,10 @@ public class CIServer extends AbstractHandler
     public JSONObject getRelevantRequestData(JSONObject data) {
         JSONObject new_data = new JSONObject();
         JSONObject repository = (JSONObject) data.get("repository");
-        new_data.append("ssh_url", repository.get("ssh_url"));
-        new_data.append("sha", data.get("after"));
+        System.out.println(repository.get("ssh_url"));
+        new_data.put("ssh_url", repository.get("ssh_url"));
+        new_data.put("sha", data.get("after"));
+        new_data.put("full_name", repository.get("full_name"));
         return new_data;
     }
 
@@ -64,9 +76,8 @@ public class CIServer extends AbstractHandler
         baseRequest.setHandled(true);
 
         JSONObject body = parseRequest(request);
-        JSONObject good_bod = getRelevantRequestData(body);
-        System.out.println(good_bod.toString());
-
+        JSONObject relevant_body = getRelevantRequestData(body);
+        System.out.println(relevant_body.toString());
         // here you do all the continuous integration tasks
         // for example
         // 1st clone your repository
