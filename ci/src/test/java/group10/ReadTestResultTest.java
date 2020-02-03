@@ -32,7 +32,8 @@ public class ReadTestResultTest {
 
     /**
      * Test with:
-     * All passing tests
+     * All passing tests, ensure that no fails exist and that names for
+     * succeded are correct
      * @throws ParserConfigurationException
      */
     @Test
@@ -42,5 +43,10 @@ public class ReadTestResultTest {
         JSONObject json = rtr.read("/", "test-results-pass");
         assertEquals(0, json.getInt("number_failed"));
         assertEquals(3, json.getInt("number_success"));
+
+        JSONObject n = (JSONObject) json.getJSONArray("succeded").get(0);
+        assertTrue(n.getString("name").contains("shouldAnswerWithTrue"));
+        JSONObject n2 = (JSONObject) json.getJSONArray("succeded").get(1);
+        assertTrue(n2.getString("name").contains("cloneTest"));
     }
 }

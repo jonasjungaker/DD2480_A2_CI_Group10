@@ -33,6 +33,7 @@ public class ReadTestResults {
         int number_failed = 0;
         int number_success = 0;
         JSONArray failed = new JSONArray();
+        JSONArray succeded = new JSONArray();
         
         //Get the values needed from the xml file
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -56,6 +57,10 @@ public class ReadTestResults {
                             failed.put(failedTest);
                         }else{
                             number_success++;
+                            JSONObject succededTest = new JSONObject();
+                            succededTest.put("name", nodeTestCases.item(i).getAttributes().getNamedItem("name").getTextContent());
+                            succededTest.put("test_number", i);
+                            succeded.put(succededTest);
                         }
                     }
                 } catch (Exception e) {
@@ -70,6 +75,7 @@ public class ReadTestResults {
         json.put("number_failed",number_failed);
         json.put("number_success", number_success);
         json.put("failed", failed);
+        json.put("succeded", succeded);
 
         return json;
     }
@@ -77,6 +83,7 @@ public class ReadTestResults {
     public static void main(String[] args) throws ParserConfigurationException {
         ReadTestResults rtr = new ReadTestResults();
         JSONObject json = rtr.read("/ci/target/", "surefire-reports");
+        System.out.println(json.toString());
     }
 
 }
