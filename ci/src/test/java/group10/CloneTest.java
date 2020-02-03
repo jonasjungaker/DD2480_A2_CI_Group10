@@ -38,8 +38,8 @@ public class CloneTest {
   public void cloneTest() throws IOException
     {
         String repoUrl = "https://github.com/jonasjungaker/DD2480_A2_CI_Group10";
-        ci.cloneRepository(repoUrl, "master", cloneDirectoryPath);
-        assertTrue(cloneDirectoryPath.exists());
+        boolean result = ci.cloneRepository(repoUrl, "master", cloneDirectoryPath);
+        assertTrue(cloneDirectoryPath.exists() && result);
     }
 
   /**
@@ -51,7 +51,8 @@ public class CloneTest {
   public void branchNotExistTest() throws IOException
     {
         String repoUrl = "https://github.com/jonasjungaker/DD2480_A2_CI_Group10";
-        ci.cloneRepository(repoUrl, "aNonExistingBranch", cloneDirectoryPath);
-        assertFalse(cloneDirectoryPath.exists());
+        boolean result = ci.cloneRepository(repoUrl, "aNonExistingBranch", cloneDirectoryPath);
+        assertFalse(cloneDirectoryPath.exists() || result);
+        
     }
 }

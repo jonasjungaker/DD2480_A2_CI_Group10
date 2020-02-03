@@ -39,8 +39,9 @@ public class CIServer {
      * @param url the url of the repository to clone
      * @param branch the branch to clone
      * @param cloneDirectoryPath the file to clone the repo to
+     * @return true if cloning was successful
      */
-    public void cloneRepository(String url, String branch, File cloneDirectoryPath) throws IOException {
+    public boolean cloneRepository(String url, String branch, File cloneDirectoryPath) throws IOException {
         // Set which branch to clone
         ArrayList<String> branches = new ArrayList<>();
         String branchPath = "refs/heads/" + branch;
@@ -54,8 +55,10 @@ public class CIServer {
             gitclone.setBranchesToClone(branches);
             gitclone.setBranch(branch);
             git = gitclone.call();
+            return true;
         } catch (GitAPIException e) {
             e.printStackTrace();
+            return false;
         }
     }
         
