@@ -19,3 +19,15 @@ public class CIServer {
         });
     }
 }
+
+public static void post(String test, String state, String sha) {
+    String user = "dieflo4711";
+    String token = "secret";
+    String repo = "test";
+    String url = "https://api.github.com/repos/"+user+"/"+repo+"/statuses/" + sha;
+    String json = "{'state': \'"+state+"\', 'description': 'desc', 'context': \'" + test +  "\', 'target_url': 'http://dleon.johvh.se'}"; 
+
+    String command = "curl --request POST --data " + json + " -u " + user + ":" + token + " " + url;
+    Process process = Runtime.getRuntime().exec(command);
+
+}
