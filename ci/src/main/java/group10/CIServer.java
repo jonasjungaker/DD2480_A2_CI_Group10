@@ -5,8 +5,6 @@ import static spark.Spark.*;
 import group10.util.Path;
 
 public class CIServer {
-    private GithubController githubController = new GithubController();
-
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
