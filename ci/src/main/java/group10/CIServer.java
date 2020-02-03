@@ -3,14 +3,19 @@ package group10;
 import static spark.Spark.*;
 
 import group10.util.Path;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.json.JSONObject;
 
 public class CIServer {
 
@@ -34,6 +39,27 @@ public class CIServer {
         });
     }
 
+    /**
+     * Parse a HttpServletRequest into JSONObject
+     * @param request POST request
+     * @return JSONObject parsed request
+     * @throws IOException
+     */
+    public JSONObject parseRequest(HttpServletRequest request) throws IOException {
+        BufferedReader reader = request.getReader();
+        StringBuffer buf = new StringBuffer();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buf.append(line);
+        }
+        String data = buf.toString();
+        if (data.length() == 0 || data.charAt(0) != '{') {
+            return new JSONObject();
+        } else  {
+            return new JSONObject(data);
+        }
+    }
+    
      /**
      * Clone the given repository & branch from git to the specified file
      * @param url the url of the repository to clone
@@ -78,6 +104,21 @@ public class CIServer {
         if(file.exists()){
             FileUtils.deleteDirectory(file);
         }
+    }
+
+    /**
+     * Extracts relevant info from the parsed data.
+     * @param JSONObject git post request
+     * @return JSONObject relevant data
+     */
+    public JSONObject getRelevantRequestData(JSONObject data) {
+        JSONObject new_data = new JSONObject();
+        JSONObject repository = (JSONObject) data.get("repository");
+        System.out.println(repository.get("ssh_url"));
+        new_data.put("ssh_url", repository.get("ssh_url"));
+        new_data.put("sha", data.get("after"));
+        new_data.put("full_name", repository.get("full_name"));
+        return new_data;
     }
  
 }
