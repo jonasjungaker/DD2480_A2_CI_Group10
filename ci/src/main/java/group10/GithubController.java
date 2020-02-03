@@ -42,6 +42,15 @@ public class GithubController {
         return "todo";
     };
 
+
+    /**
+     * Method that sends pass and fail for the build results.
+     * 
+     * @param test is test name
+     * @param state is the test result 
+     * @param sha is the commit id
+     * @return
+     */
     public static void post(String test, String state, String sha) {
         String user = "dieflo4711";
         String token = "password";
