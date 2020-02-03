@@ -21,7 +21,7 @@ public class CloneTest {
   @Before
   public void setUp() {
     ci = new CIServer();
-    cloneDirectoryPath = new File("../../gitclones");
+    cloneDirectoryPath = new File("../gitclones");
   }
 
   @After
