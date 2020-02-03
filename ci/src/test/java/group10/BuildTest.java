@@ -6,13 +6,13 @@ import org.junit.Test;
 
 
 /**
- * Testing the build mechanism
+ * Testing the build/compilation mechanism
  */
 public class BuildTest 
 {
 
     /**
-     * Testing that the builder recognizes a fault in the build
+     * Testing that the builder recognizes a success
      */
     @Test
     public void successfulTest()
@@ -25,7 +25,7 @@ public class BuildTest
     }
 
     /**
-     * Testing that the builder recognizes a fault in the build
+     * Testing that the builder recognizes a fault in the testing
      */
     @Test
     public void testFailTest()
@@ -39,7 +39,7 @@ public class BuildTest
     }
 
     /**
-     * Testing that the builder recognizes a fault in the build
+     * Testing that the builder recognizes a fault in compiling
      */
     @Test
     public void compileFailTest()

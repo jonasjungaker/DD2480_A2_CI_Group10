@@ -1,6 +1,9 @@
 package group10;
 
-
+/**
+ * A class for containing information about builds with maven
+ * For handling specific build ouputs
+ */
 public class BuildData
 {
     public boolean buildSuccess;

@@ -7,8 +7,13 @@ import org.apache.maven.cli.MavenCli;
 
 public class CloneBuilder
 {
-    public static String build(String path, MavenCli cli){
-        // MavenCli cli = new MavenCli();
+    /**
+     * builds a maven project at the designated path
+     * @param path
+     * @return a string of the output of the build process for checking with the checkBuildOutput method
+     */
+    public static String build(String path){
+        MavenCli cli = new MavenCli();
 
         // Running build and logging output
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -18,6 +23,11 @@ public class CloneBuilder
         return baos.toString();
     }
         
+    /**
+     * Checks the build output of the maven command line interface command doMain()
+     * @param buildString
+     * @return a BuildData object that contains build information on whether or not the build succeeded or not
+     */
     public static BuildData checkBuildOutput(String buildString)
     {
         // Checking if build was successful
