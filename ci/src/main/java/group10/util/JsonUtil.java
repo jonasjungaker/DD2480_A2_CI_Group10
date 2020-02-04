@@ -33,6 +33,7 @@ public class JsonUtil {
         relevant_data.put("ssh_url", repository.get("ssh_url"));
         relevant_data.put("sha", all_data.get("after"));
         relevant_data.put("ref", all_data.get("ref"));
+        relevant_data.put("clone_url", repository.get("clone_url"));
         System.out.println("exiting");
         return relevant_data;
     }
