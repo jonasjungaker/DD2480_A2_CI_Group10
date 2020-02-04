@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.mysql.cj.protocol.Resultset;
-
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class DatabaseHandlerTest {
     @Before
     public void setup() {
         dbh.connect("test");
-        reset();
+        //reset();
     }
 
     @After
@@ -77,7 +76,7 @@ public class DatabaseHandlerTest {
      * Test too long input, should not add it
      */
     @Test
-    public void expectSQLerror() {
+    public void expectNoAddedBuild() {
         // do not run tests if no db connection
         if (dbh.conn != null) {
             // 16 characters over allowed 15 for status
@@ -87,4 +86,49 @@ public class DatabaseHandlerTest {
             assertEquals(currentRow, currentRow2);
         } 
     }
+
+    /**
+     * Test adding one passed and one failed test to
+     * a build.
+     */
+    @Test
+    public void addTestsToBuild() {
+        // do not run tests if no db connection
+        if (dbh.conn != null) {
+            // 16 characters over allowed 15 for status
+            int currentRowPassed = getRows("passedTest");
+            int currentRowFailed = getRows("failedTest");
+            int buildID = dbh.addBuild(0, "pending", "test", "tehe");
+            JSONObject results = new JSONObject("{\"succeded\":[{\"name\":\"fileDFSTest\",\"test_number\":0}],\"number_failed\":1,\"success\":false,\"number_success\":1,\"failed\":[{\"name\":\"shouldAnswerWithTrue\",\"cause\":\"\\n    java.lang.AssertionError\\n\\tat group10.AppTest.shouldAnswerWithTrue(AppTest.java:18)\\n\\n  \",\"test_number\":0}]}");
+            dbh.addTestsToBuild(buildID, results);
+            int currentRow2Passed = getRows("passedTest");
+            int currentRow2Failed = getRows("failedTest");
+            assertEquals(currentRowPassed+1, currentRow2Passed);
+            assertEquals(currentRowFailed+1, currentRow2Failed);
+        } 
+    }
+
+    /**
+     * Test to pass a result where no tests
+     * failed or passed!
+     */
+    @Test
+    public void addTestsEmptyTests() {
+        // do not run tests if no db connection
+        if (dbh.conn != null) {
+            // 16 characters over allowed 15 for status
+            int currentRowPassed = getRows("passedTest");
+            int currentRowFailed = getRows("failedTest");
+            int buildID = dbh.addBuild(0, "pending", "test", "tehe");
+            JSONObject results = new JSONObject("{\"succeded\":[],\"number_failed\":0,\"success\":false,\"number_success\":0,\"failed\":[]}");
+            dbh.addTestsToBuild(buildID, results);
+            int currentRow2Passed = getRows("passedTest");
+            int currentRow2Failed = getRows("failedTest");
+            assertEquals(currentRowPassed, currentRow2Passed);
+            assertEquals(currentRowFailed, currentRow2Failed);
+        } 
+    }
+
+
+
 }
