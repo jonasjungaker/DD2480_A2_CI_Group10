@@ -22,7 +22,7 @@ public class WebsiteController {
         Map<String, Object> model = new HashMap<>();
         //todo: get data from DB
         
-        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/template.html"));
+        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/remakeToTemplate.html"));
     } 
     
     public static String render(Map<String, Object> model, String templatePath) {
