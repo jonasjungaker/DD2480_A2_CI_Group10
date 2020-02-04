@@ -70,7 +70,7 @@ public class CIServer {
     public boolean cloneRepository(String url, String branch, File cloneDirectoryPath) throws IOException {
         // Set which branch to clone
         ArrayList<String> branches = new ArrayList<>();
-        String branchPath = "refs/heads/" + branch;
+        String branchPath = branch;
         branches.add(branchPath);
 
         // Clone the repository
