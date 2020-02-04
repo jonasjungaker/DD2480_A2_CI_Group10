@@ -51,6 +51,27 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.19</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.jdom/jdom2 -->
+    <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom2</artifactId>
+        <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+      <version>5.4.2.201908231537-r</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.directory.studio</groupId>
+      <artifactId>org.apache.commons.io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-velocity</artifactId>
+      <version>2.7.1</version>
+    </dependency>
   </dependencies>
 
   <build>
