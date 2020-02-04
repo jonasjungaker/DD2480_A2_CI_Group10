@@ -29,7 +29,7 @@ public class CIServer {
         // this is where HTML, CSS and images are stored
         staticFiles.location("/public");
         // this is the end point for displaying list of previous builds
-        get(Path.HOME, (req, res) -> "todo make a list of builds!");
+        get(Path.HOME, (req, res) -> WebsiteController.handleGet(req, res));
         // this is the github post entrypoint
         post(Path.GITHUB, (req, res) -> GithubController.handlePost(req, res));
 
