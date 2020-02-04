@@ -94,6 +94,7 @@ a {
     border-radius: 30px;
     padding: 2px 6px;
     margin: 2px;
+    font-weight: 900;
 }
 
 .pending {
@@ -109,4 +110,21 @@ a {
 .passed {
     color: rgba(85, 201, 70, 0.918);
     border-color: rgba(85, 201, 70, 0.918);
+}
+
+.container {
+    border: 1px solid red;
+}
+
+#singe-build-list {
+    width: 50%;
+    margin: 0 auto;
+}
+
+#singe-build-list tr {
+    text-align: center;
+}
+
+#single-build-header {
+    text-align: center;
 }
