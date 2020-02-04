@@ -3,21 +3,28 @@ package group10;
 import spark.Request;
 import spark.Response;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import group10.util.JsonUtil;
 
 public class GithubController {
     private static JsonUtil json = new JsonUtil();
+    private static CIServer ciServer = new CIServer();
 
     /**
-     * Handle the Github post event: get info, clone
-     * run tests and return response.
-     * @param request from github
+     * Handle the Github post event: get info, clone run tests and return response.
+     * 
+     * @param request  from github
      * @param response to send back
      * @return
+     * @throws IOException
+     * @throws JSONException
      */
-    public static String handlePost(Request request, Response response) {
+    public static String handlePost(Request request, Response response) throws JSONException, IOException {
         // turn data string into a map structure
         System.out.println(request.body());
         JSONObject all_data = json.toMap(request.body());   
@@ -26,9 +33,20 @@ public class GithubController {
         
         // todo set commit pending
         // clone repo
+        File cloneDirectoryPath = new File("/clone");
+        boolean cloned = ciServer.cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"), cloneDirectoryPath);
+        
         // compile repo
         // run tests
         // set commit
-        return "todo";
+
+        //tear down the session
+        ciServer.tearDown(cloneDirectoryPath);
+
+        //Check that everything went as it should
+        if(cloned){
+            return "success";
+        }
+        return "failed";
     };
 }
