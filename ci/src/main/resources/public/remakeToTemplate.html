@@ -1,0 +1,117 @@
+<html class="gr__"><head>
+    <title>G10ci</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&amp;display=swap" rel="stylesheet"> 
+    </head>
+    
+    <body data-gr-c-s-loaded="true">
+    <!--This is just the top bar with logo-->
+    <div class="top-bar">
+        <div class="logo">
+            <span id="g10">G10</span>
+            <span>ci</span>
+        </div>
+    </div>
+    <!--List of builds-->
+    <div class="list">
+        <h1 class="header">Builds</h1>
+        <table class="build-list">
+            <tbody><tr>
+                <th>Build ID</th>
+                <th># Tests</th>
+                <th>Breakdown</th>
+                <th>Branch</th>
+                <th>Status</th>
+            </tr>
+            <!--Each tr with td inside should be generated in a loop-->
+            <tr>
+                <td>
+                    <!--Ref to build url so that when you click, you
+                    get reffered to that pecific build page-->
+                    <a class="bold" href="build/5">5</a>
+                </td>
+                <!--Number of tests-->
+                <td>23</td>
+                <!--Dash if test is running, otherwise use progress-bar below-->
+                <td>-</td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">master</a>
+                </td>
+                <td>
+                    <span class="status pending">pending</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="bold" href="build/4">4</a>
+                </td>
+                <td>10</td>
+                <td>
+                    <div class="progress-bar">
+                        <!--width is completion amount, e.g. 56% of tests passed-->
+                        <div class="progress" style="height:15px;width:56%"></div>
+                    </div>
+                </td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">feat/website</a>
+                </td>
+                <td>
+                    <span class="status failed">failed</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="bold" href="build/3">3</a>
+                </td>
+                <td>23</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress" style="height:15px;width:18%"></div>
+                    </div>
+                </td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">fix/websiteError</a>
+                </td>
+                <td>
+                    <span class="status failed">failed</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="bold" href="build/2">2</a>
+                </td>
+                <td>23</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress full" style="height:15px;width:100%"></div>
+                    </div>
+                </td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">feat/commitStatus</a>
+                </td>
+                <td>
+                    <span class="status passed">passed</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="bold" href="build/1">1</a>
+                </td>
+                <td>12</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress" style="height:15px;width:67%"></div>
+                    </div>
+                </td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">test/parser</a>
+                </td>
+                <td>
+                    <span class="status failed">failed</span>
+                </td>
+            </tr>
+          </tbody></table>
+    </div>
+    
+    
+     </body></html>
