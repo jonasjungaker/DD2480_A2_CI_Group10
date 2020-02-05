@@ -33,7 +33,7 @@ public class GithubController {
         
         // todo set commit pending
         // clone repo
-        File cloneDirectoryPath = new File("/clone");
+        File cloneDirectoryPath = new File("clone");
         boolean cloned = false;
         try {
             cloned = ciServer.cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"),
