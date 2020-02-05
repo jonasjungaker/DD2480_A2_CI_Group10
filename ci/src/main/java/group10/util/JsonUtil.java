@@ -27,6 +27,7 @@ public class JsonUtil {
         JSONObject relevant_data = new JSONObject();
 
         JSONObject repository = (JSONObject) all_data.get("repository");
+        JSONObject pusher = (JSONObject) all_data.get("pusher");
         // following the format :owner/:repository
         relevant_data.put("full_name", repository.get("full_name"));
         // url used to ssh clone
@@ -34,7 +35,7 @@ public class JsonUtil {
         relevant_data.put("sha", all_data.get("after"));
         relevant_data.put("ref", all_data.get("ref"));
         relevant_data.put("clone_url", repository.get("clone_url"));
-        System.out.println("exiting");
+        relevant_data.put("author", pusher.get("name"));
         return relevant_data;
     }
 }

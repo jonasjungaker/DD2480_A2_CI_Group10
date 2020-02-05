@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -15,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group10.util.JsonUtil;
+import group10.util.Path;
 
 public class GithubController {
     private static JsonUtil json = new JsonUtil();
@@ -31,31 +34,52 @@ public class GithubController {
      * @throws IOException
      * @throws JSONException
      */
-    public static String handlePost(Request request, Response response){
+    public static String handlePost(Request request, Response response) {
         // turn data string into a map structure
-        System.out.println(request.body());
-        JSONObject all_data = json.toMap(request.body());   
+        JSONObject all_data = json.toMap(request.body());
         JSONObject relevant_data = json.getRelevantData(all_data);
-        System.out.println(relevant_data.toString());
-        
+
+        int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
+
         // todo set commit pending
         // clone repo
-        File cloneDirectoryPath = new File("clone");
+        File cloneDirectoryPath = new File("clone/");
         boolean cloned = false;
         try {
             cloned = cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"),
                     cloneDirectoryPath);
         } catch (JSONException e) {
             e.printStackTrace();
-            System.out.println("Failed cloning with: "+ e.getMessage());
+            System.out.println("Failed cloning with: " + e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Failed cloning with: "+ e.getMessage());
+            System.out.println("Failed cloning with: " + e.getMessage());
         }
-        
-        // compile repo
-        // run tests
-        // set commit
+
+        // build
+        Path p = new Path();
+        File pom = p.fileDFS("/clone", "pom.xml");
+        String dir = pom.getAbsolutePath().replace("pom.xml", "");
+        dir = dir.substring(0, dir.length()-1);
+        CloneBuilder cb = new CloneBuilder(dir);
+        boolean success = cb.rebuild();
+        System.out.println("Build success: " + cb.buildSuccess);
+
+        // check results
+        ReadTestResults rts = new ReadTestResults();
+        try {
+            JSONObject testResults = rts.read("/clone", "surefire-reports");
+            CIServer.dbh.addTestsToBuild(buildID, testResults);
+            if (testResults.getBoolean("success")) {
+                System.out.println("passed all");
+            } else {
+                System.out.println("did not pass");
+            }
+
+        } catch (ParserConfigurationException e1) {
+            e1.printStackTrace();
+            return "failed";
+        }
 
         //tear down the session
         try {
@@ -116,5 +140,10 @@ public class GithubController {
         if(file.exists()){
             FileUtils.deleteDirectory(file);
         }
+    }
+
+    public static void main(String[] args) {
+        
+        //System.out.println(pom);
     }
 }

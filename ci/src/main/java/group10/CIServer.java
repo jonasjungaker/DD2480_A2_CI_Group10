@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 
 public class CIServer {
+    static DatabaseHandler dbh = new DatabaseHandler();;
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
+        dbh.connect("ci");
         port(8080);
         // this is where HTML, CSS and images are stored
         staticFiles.location("/public");
