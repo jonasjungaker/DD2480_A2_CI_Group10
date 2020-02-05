@@ -181,6 +181,67 @@ public class DatabaseHandler {
         return new JSONArray();
     }
 
+    /**
+     * Get information about a specific build.
+     * @param buildID, id of build
+     * @return JSONObject of build
+     */
+    public JSONObject getBuild(int buildID) {
+        if (conn != null) {
+            try {
+                String query = "select * from build where build_id = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, buildID);
+                ResultSet rs = stmt.executeQuery();
+                rs.next();
+                // build data
+                JSONObject build = new JSONObject();
+                build.put("buildID", rs.getInt("build_id"));
+                build.put("date", rs.getDate("date"));
+                build.put("status", rs.getString("status"));
+                build.put("author", rs.getString("author"));
+                build.put("branch", rs.getString("branch"));
+                build.put("elapsed", rs.getDouble("elapsed"));
+                build.put("number_passed", rs.getInt("number_passed"));
+                build.put("number_failed", rs.getInt("number_failed"));
+
+                // passed test data
+                JSONArray passedTests = new JSONArray();
+                String getPassed = "select * from passedTest where build_id = ?";
+                stmt = conn.prepareStatement(getPassed);
+                stmt.setInt(1, buildID);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    JSONObject test = new JSONObject();
+                    test.put("name", rs.getString("name"));
+                    passedTests.put(test);
+                }
+
+                // failed test data
+                JSONArray failedTests = new JSONArray();
+                String getFailed = "select * from failedTest where build_id = ?";
+                stmt = conn.prepareStatement(getFailed);
+                stmt.setInt(1, buildID);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    JSONObject test = new JSONObject();
+                    test.put("name", rs.getString("name"));
+                    test.put("message", rs.getString("message"));
+                    failedTests.put(test);
+                }
+
+                build.put("passed_tests", passedTests);
+                build.put("failed_tests", failedTests);
+                
+                return build; 
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new JSONObject();
+    }
+
     public void close() throws SQLException {
         conn.close();
     }

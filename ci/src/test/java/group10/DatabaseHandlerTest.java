@@ -161,12 +161,32 @@ public class DatabaseHandlerTest {
 
             builds = dbh.getBuilds(0, 2);
             assertEquals(2, builds.length());
-            System.out.println(builds);
             build = (JSONObject) builds.get(1);
             assertEquals("pepega", build.getString("author"));
         } 
     }
 
+    /**
+     * Test if it possible to get a single build.
+     * Check that the values are the same as
+     * the one inserted.
+     */
+    @Test
+    public void getSingleBuildTest() {
+        // do not run tests if no db connection
+        if (dbh.conn != null) {
+            int buildID = dbh.addBuild("pending", "pepe", "cool");            
+            buildIds.add(buildID);
 
+            JSONObject results = new JSONObject("{\"succeded\":[{\"name\":\"fileDFSTest\",\"test_number\":0}],\"number_failed\":1,\"success\":false,\"number_success\":1,\"failed\":[{\"name\":\"shouldAnswerWithTrue\",\"cause\":\"\\n    java.lang.AssertionError\\n\\tat group10.AppTest.shouldAnswerWithTrue(AppTest.java:18)\\n\\n  \",\"test_number\":0}]}");
+            dbh.addTestsToBuild(buildID, results);
 
+            JSONObject build = dbh.getBuild(buildID);
+            JSONArray passedTests = (JSONArray) build.get("passed_tests");
+            assertEquals(1, passedTests.length());
+            JSONArray failedTests = (JSONArray) build.get("failed_tests");
+            assertEquals(1, failedTests.length());
+            assertEquals("pending", (String)build.get("status"));
+        } 
+    }
 }
