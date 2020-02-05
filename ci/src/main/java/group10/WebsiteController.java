@@ -5,8 +5,8 @@ import spark.Response;
 
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.json.JSONArray;
 
 public class WebsiteController {
 
@@ -19,13 +19,13 @@ public class WebsiteController {
      */
     public static String handleGet(Request request, Response response) 
     {
-        Map<String, Object> model = new HashMap<>();
+        JSONArray model = new JSONArray();
         //todo: get data from DB
         
         return new VelocityTemplateEngine().render(new ModelAndView(model, "public/remakeToTemplate.html"));
     } 
     
-    public static String render(Map<String, Object> model, String templatePath) {
+    public static String render(JSONArray model, String templatePath) {
         return new VelocityTemplateEngine().render(
             new ModelAndView(model, templatePath)
             );
