@@ -34,18 +34,17 @@ public class DatabaseHandler {
      * @param branch branch the tests was run on
      * @return build_id, id of build
      */
-    public int addBuild(double elapsed, String status, String author, String branch) {
+    public int addBuild(String status, String author, String branch) {
         if (conn != null) {
-            String query = "insert into build (date, elapsed, status, author, branch) values (?,?,?,?,?)";
+            String query = "insert into build (date, status, author, branch) values (?,?,?,?)";
             java.util.Date date = new java.util.Date();
             Timestamp timestamp = new Timestamp(date.getTime());
             try {
                 PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 preparedStmt.setString(1, timestamp.toString());
-                preparedStmt.setDouble(2, elapsed);
-                preparedStmt.setString(3, status);
-                preparedStmt.setString(4, author);
-                preparedStmt.setString(5, branch);
+                preparedStmt.setString(2, status);
+                preparedStmt.setString(3, author);
+                preparedStmt.setString(4, branch);
 
                 preparedStmt.execute();
                 // get the ID of the inserted row, needed 
@@ -70,9 +69,9 @@ public class DatabaseHandler {
      */
     public boolean addTestsToBuild(int buildID, JSONObject results) {
         if (conn != null) {
+            // add the failed tests
             JSONArray failed = (JSONArray) results.get("failed");
             String query = "insert into failedTest (build_id, name, message) values (?,?,?)";
-
             for (int i = 0; i < failed.length(); i++) {
                 JSONObject result = failed.getJSONObject(i);
                 String name = (String) result.get("name");
@@ -91,9 +90,9 @@ public class DatabaseHandler {
                 }
             }
 
+            // add the passed tests
             JSONArray passed = (JSONArray) results.get("succeded");
             query = "insert into passedTest (build_id, name) values (?,?)";
-
             for (int i = 0; i < passed.length(); i++) {
                 JSONObject result = passed.getJSONObject(i);
                 String name = (String) result.get("name");
@@ -105,14 +104,81 @@ public class DatabaseHandler {
 
                     preparedStmt.execute();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     System.out.println("Adding passed tests failed");
                     return false;
                 }
             }
+
+            // add the meta data for the tests
+            query = "UPDATE build SET " + 
+                        "elapsed = ?," +
+                        "status = ?," +
+                        "number_passed = ?," +
+                        "number_failed = ?" + 
+                        "WHERE build_id = ?";
+            try {
+                PreparedStatement preparedStmt = conn.prepareStatement(query);
+                // TODO: get elapsed time from result
+                // TODO: class name
+                preparedStmt.setInt(1, 0);
+                if ((boolean)results.get("success")) {
+                    preparedStmt.setString(2, "passed");
+                } else {
+                    preparedStmt.setString(2, "failed");
+                }
+                preparedStmt.setInt(3, (int)results.get("number_success"));
+                preparedStmt.setInt(4, (int)results.get("number_failed"));
+                preparedStmt.setInt(5, buildID);
+
+                preparedStmt.execute(); 
+            } catch (SQLException e) {
+                System.out.println("Failed update of build meta data");
+                return false;
+            }
+
             return true;
         }
         return false;
+    }
+
+    /**
+     * Method to get builds and the corresponding 
+     * @param from, starting position
+     * @param number, number of builds to fetch
+     * @return JSONArray of JSONObjects
+     */
+    public JSONArray getBuilds(int from, int number) {
+        if (conn != null) {
+            String query = "select * from build order by date desc limit ?,?";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, from);
+                stmt.setInt(2, number);
+                ResultSet rs = stmt.executeQuery(); 
+
+                JSONArray builds = new JSONArray();
+                while (rs.next()) {
+                    JSONObject build = new JSONObject();
+                    build.put("buildID", rs.getInt("build_id"));
+                    build.put("date", rs.getDate("date"));
+                    build.put("status", rs.getString("status"));
+                    build.put("author", rs.getString("author"));
+                    build.put("branch", rs.getString("branch"));
+                    build.put("elapsed", rs.getDouble("elapsed"));
+                    build.put("number_passed", rs.getInt("number_passed"));
+                    build.put("number_failed", rs.getInt("number_failed"));
+                    builds.put(build);
+                }
+                rs.close();
+                return builds;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Failed to get build list");
+            }
+        }
+        return new JSONArray();
     }
 
     public void close() throws SQLException {
