@@ -105,20 +105,4 @@ public class CIServer {
             FileUtils.deleteDirectory(file);
         }
     }
-
-    /**
-     * Extracts relevant info from the parsed data.
-     * @param JSONObject git post request
-     * @return JSONObject relevant data
-     */
-    public JSONObject getRelevantRequestData(JSONObject data) {
-        JSONObject new_data = new JSONObject();
-        JSONObject repository = (JSONObject) data.get("repository");
-        System.out.println(repository.get("ssh_url"));
-        new_data.put("ssh_url", repository.get("ssh_url"));
-        new_data.put("sha", data.get("after"));
-        new_data.put("full_name", repository.get("full_name"));
-        return new_data;
-    }
- 
 }
