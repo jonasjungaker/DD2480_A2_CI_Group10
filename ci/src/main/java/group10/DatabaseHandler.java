@@ -71,10 +71,13 @@ public class DatabaseHandler {
         if (conn != null) {
             // add the failed tests
             JSONArray failed = (JSONArray) results.get("failed");
-            String query = "insert into failedTest (build_id, name, message) values (?,?,?)";
+            String query = "insert into test (build_id, name, message, elapsed, class) values (?,?,?,?,?)";
             for (int i = 0; i < failed.length(); i++) {
                 JSONObject result = failed.getJSONObject(i);
+                System.out.println(result);
                 String name = (String) result.get("name");
+                double elapsed = (double) result.get("time");
+                String className = (String) result.get("classname");
                 String cause = (String) result.get("cause");
 
                 try {
@@ -82,6 +85,8 @@ public class DatabaseHandler {
                     preparedStmt.setInt(1, buildID);
                     preparedStmt.setString(2, name);
                     preparedStmt.setString(3, cause);
+                    preparedStmt.setDouble(4, elapsed);
+                    preparedStmt.setString(5, className);
 
                     preparedStmt.execute();
                 } catch (SQLException e) {
@@ -92,19 +97,23 @@ public class DatabaseHandler {
 
             // add the passed tests
             JSONArray passed = (JSONArray) results.get("succeded");
-            query = "insert into passedTest (build_id, name) values (?,?)";
+            query = "insert into test (build_id, name, elapsed, class) values (?,?,?,?)";
             for (int i = 0; i < passed.length(); i++) {
                 JSONObject result = passed.getJSONObject(i);
                 String name = (String) result.get("name");
+                double elapsed = (double) result.get("time");
+                String className = (String) result.get("classname");
 
                 try {
                     PreparedStatement preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1, buildID);
                     preparedStmt.setString(2, name);
+                    preparedStmt.setDouble(3, elapsed);
+                    preparedStmt.setString(4, className);
 
                     preparedStmt.execute();
                 } catch (SQLException e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                     System.out.println("Adding passed tests failed");
                     return false;
                 }
@@ -119,9 +128,7 @@ public class DatabaseHandler {
                         "WHERE build_id = ?";
             try {
                 PreparedStatement preparedStmt = conn.prepareStatement(query);
-                // TODO: get elapsed time from result
-                // TODO: class name
-                preparedStmt.setInt(1, 0);
+                preparedStmt.setDouble(1, (double)results.get("time"));
                 if ((boolean)results.get("success")) {
                     preparedStmt.setString(2, "passed");
                 } else {
@@ -207,27 +214,23 @@ public class DatabaseHandler {
 
                 // passed test data
                 JSONArray passedTests = new JSONArray();
-                String getPassed = "select * from passedTest where build_id = ?";
+                JSONArray failedTests = new JSONArray();
+                String getPassed = "select * from test where build_id = ?";
                 stmt = conn.prepareStatement(getPassed);
                 stmt.setInt(1, buildID);
                 rs = stmt.executeQuery();
                 while (rs.next()) {
                     JSONObject test = new JSONObject();
                     test.put("name", rs.getString("name"));
-                    passedTests.put(test);
-                }
-
-                // failed test data
-                JSONArray failedTests = new JSONArray();
-                String getFailed = "select * from failedTest where build_id = ?";
-                stmt = conn.prepareStatement(getFailed);
-                stmt.setInt(1, buildID);
-                rs = stmt.executeQuery();
-                while (rs.next()) {
-                    JSONObject test = new JSONObject();
-                    test.put("name", rs.getString("name"));
-                    test.put("message", rs.getString("message"));
-                    failedTests.put(test);
+                    test.put("elapsed", rs.getString("elapsed"));
+                    test.put("className", rs.getString("class"));
+                    String message = rs.getString("message");
+                    System.out.println(message);
+                    if (message == null) {
+                        passedTests.put(test);
+                    } else {
+                        failedTests.put(test);
+                    }
                 }
 
                 build.put("passed_tests", passedTests);
