@@ -60,6 +60,11 @@ a {
     color: rgb(99, 97, 253);
 }
 
+h1, h2 {
+    color: rgb(21, 21, 61);
+    margin: 0px;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -117,7 +122,7 @@ a {
 }
 
 #singe-build-list {
-    width: 50%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -125,6 +130,84 @@ a {
     text-align: center;
 }
 
-#single-build-header {
-    text-align: center;
+#single-list {
+    width: 100%;
+    min-height: 750px;
+    overflow: auto;
+    margin-top: 28px;
+}
+
+#sidebar {
+    width: 18%;
+    margin-left: 35px;
+    float: left;
+}
+
+#sidebar-header {
+    line-height:60px;
+    overflow: auto;
+    border-bottom: 2px solid rgb(223, 223, 223);
+    margin-bottom: 10px;
+}
+
+#sidebar-header h1 {
+    float: left;
+    text-align: bottom;
+}
+
+#sidebar-header h2 {
+    float: right;
+    text-align: bottom;
+}
+
+#sidebar-main-container h2 {
+    margin-bottom: 5px;
+    font-size: 21px !important;
+    color: rgb(92, 91, 91) !important;
+}
+
+#main-test-container {
+    width: 66%;
+    float: right;
+    margin-right: 35px;
+}
+
+#main-test-container h1 {
+    margin: 10px 0px 5px 0px;
+}
+
+.test-container {
+    width: 100%;
+    max-height: 307px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+    /*-webkit-mask-image: -webkit-gradient(linear,left 80%,left bottom,from(black),to(rgba(0,0,0,0)));*/
+}
+
+#test-info-container {
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#sidebar-table {
+    width: 100%;
+}
+
+#sidebar-table th {
+    font-weight: bold;
+    border-bottom: none;
+}
+
+/* TABLE STYLES */
+#sidebar-table tr {
+    width: 50%;
+    text-align: left;
+    line-height: 1.5em;
+}
+
+#sidebar-table td {
+    font-size: small;
+    font-weight: 400;
+    border-bottom: none;
 }
