@@ -48,19 +48,21 @@ public class ReadTestResults {
                     for(int i = 0; i < nodeTestCases.getLength(); i++){
                         Node n = nodeTestCases.item(i);
                         Node child = n.getFirstChild();
+
+                        //Add details about the test
+                        JSONObject test = new JSONObject();
+                        test.put("name", nodeTestCases.item(i).getAttributes().getNamedItem("name").getTextContent());
+                        test.put("test_number", i);
+                        test.put("time", nodeTestCases.item(i).getAttributes().getNamedItem("time").getTextContent());
+                        test.put("classname", nodeTestCases.item(i).getAttributes().getNamedItem("classname").getTextContent());
+                        //If test failed add details of fail
                         if(child != null){
                             number_failed++;
-                            JSONObject failedTest = new JSONObject();
-                            failedTest.put("name", nodeTestCases.item(i).getAttributes().getNamedItem("name").getTextContent());
-                            failedTest.put("test_number", i);
-                            failedTest.put("cause", nodeTestCases.item(i).getTextContent());
-                            failed.put(failedTest);
+                            test.put("cause", nodeTestCases.item(i).getTextContent());
+                            failed.put(test);                       
                         }else{
                             number_success++;
-                            JSONObject succededTest = new JSONObject();
-                            succededTest.put("name", nodeTestCases.item(i).getAttributes().getNamedItem("name").getTextContent());
-                            succededTest.put("test_number", i);
-                            succeded.put(succededTest);
+                            succeded.put(test);
                         }
                     }
                 } catch (Exception e) {
