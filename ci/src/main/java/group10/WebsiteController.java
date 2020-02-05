@@ -21,8 +21,10 @@ public class WebsiteController {
     {
         JSONArray model = new JSONArray();
         //todo: get data from DB
-        
-        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/remakeToTemplate.html"));
+
+        JSONArray builds = new JSONArray("[{\"date\":\"2020-02-05\",\"elapsed\":0,\"number_failed\":0,\"author\":\"pepe\",\"buildID\":70,\"number_passed\":0,\"branch\":\"cool\",\"status\":\"pending\"},{\"date\":\"2020-02-05\",\"elapsed\":0,\"number_failed\":0,\"author\":\"pepega\",\"buildID\":71,\"number_passed\":0,\"branch\":\"korv\",\"status\":\"pending\"}]");
+        model.put(builds);
+        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/exampleTemplate.html"));
     } 
     
     public static String render(JSONArray model, String templatePath) {
