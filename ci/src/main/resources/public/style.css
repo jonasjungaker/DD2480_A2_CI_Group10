@@ -1,0 +1,112 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* TOP BAR AND LOGO */
+
+.top-bar {
+    width: 100%;
+    height: 3.5em;
+    background-color: rgb(21, 21, 61);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0);
+}
+
+.logo {
+    height: 100%;
+    vertical-align: middle;
+    color: white;
+}
+
+#g10 {
+    display: inline-block;
+    margin-left: 1em;
+    font-size: 2em;
+    font-weight: 100;
+    padding-top: 0.2em;
+}
+
+/* TABLE TITLE */
+
+.header {
+    color: rgb(21, 21, 61);
+    margin-top: 1.5em;
+    margin-left: 1em;
+}
+
+/* TABLE STYLES */
+table tr {
+    text-align: left;
+    line-height: 3em;
+}
+
+table th {
+    font-weight: bold;
+    border-bottom: 2px solid rgb(223, 223, 223);
+}
+
+table td {
+    font-size: small;
+    font-weight: 400;
+    border-bottom: 1px solid rgb(223, 223, 223);
+}
+
+/* Link styles */
+
+a {
+    text-decoration: none;
+    color: rgb(99, 97, 253);
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* Progress bar style */
+.progress-bar {
+    width: 70%;
+    border-radius: 10px;
+    background-color: rgb(231, 97, 97);
+}
+
+.progress {
+    background-color: rgb(0, 212, 131);
+    border-right: 1px solid white;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.progress.full {
+    border-radius: 10px;
+}
+
+.build-list {
+    width: 95%;
+    margin: 2em;
+    border-collapse: collapse;
+    color: rgb(92, 91, 91);
+}
+
+.status {
+    border: 1.5px solid;
+    border-radius: 30px;
+    padding: 2px 6px;
+    margin: 2px;
+}
+
+.pending {
+    color: rgb(250, 208, 68);
+    border-color: rgb(250, 208, 68);
+}
+
+.failed {
+    color: rgb(231, 97, 97);
+    border-color: rgb(231, 97, 97);
+}
+
+.passed {
+    color: rgba(85, 201, 70, 0.918);
+    border-color: rgba(85, 201, 70, 0.918);
+}
