@@ -78,7 +78,6 @@ public class DatabaseHandler {
             String query = "insert into test (build_id, name, message, elapsed, class) values (?,?,?,?,?)";
             for (int i = 0; i < failed.length(); i++) {
                 JSONObject result = failed.getJSONObject(i);
-                System.out.println(result);
                 String name = (String) result.get("name");
                 double elapsed = Double.valueOf(result.getString("time"));
                 String className = (String) result.get("classname");
@@ -94,6 +93,7 @@ public class DatabaseHandler {
 
                     preparedStmt.execute();
                 } catch (SQLException e) {
+                    e.printStackTrace();
                     System.out.println("Adding failed tests failed");
                     return false;
                 }

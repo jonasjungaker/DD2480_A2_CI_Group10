@@ -26,7 +26,6 @@ public class ReadTestResults {
      */
     public JSONObject read(String root, String fileName) throws ParserConfigurationException {
         File reportDirectory = p.fileDFS(root, fileName);
-        System.out.println(reportDirectory);
         //Prepare JSONObject to return
         JSONObject json = new JSONObject();
         boolean success = false;
