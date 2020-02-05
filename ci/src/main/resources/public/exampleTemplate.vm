@@ -1,5 +1,7 @@
+
+
 <html class="gr__"><head>
-    <title>Example</title>
+    <title>G10ci</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&amp;display=swap" rel="stylesheet"> 
     </head>
@@ -8,7 +10,7 @@
     <!--This is just the top bar with logo-->
     <div class="top-bar">
         <div class="logo">
-            <span id="g10">Example</span>
+            <span id="g10">G10</span>
             <span>ci</span>
         </div>
     </div>
@@ -16,7 +18,8 @@
     <div class="list">
         <h1 class="header">Builds</h1>
         <table class="build-list">
-            <tbody><tr>
+            <tbody>
+            <tr>
                 <th>Build ID</th>
                 <th># Tests</th>
                 <th>Breakdown</th>
@@ -24,13 +27,15 @@
                 <th>Status</th>
             </tr>
             <!--Each tr with td inside should be generated in a loop-->
-            
-            <tr>
-                <td>
-                </td>
+            #foreach($build in $builds)
+            <tr> 
+                <td> $build.date </td>
             </tr>
-          </tbody></table>
+            #end
+            <!--Ref to build url so that when you click, you
+            get reffered to that pecific build page-->
+          </tbody>
+        </table>
     </div>
-
     </body>
 </html>
