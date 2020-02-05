@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit test for parse functionality.
+ * Unit test for the database handler
  */
 public class DatabaseHandlerTest {
     DatabaseHandler dbh = new DatabaseHandler();
@@ -24,7 +24,6 @@ public class DatabaseHandlerTest {
     @Before
     public void setup() {
         dbh.connect("test");
-        //reset();
     }
 
     @After

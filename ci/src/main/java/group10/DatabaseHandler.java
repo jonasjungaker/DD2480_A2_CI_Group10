@@ -9,6 +9,10 @@ import org.json.JSONObject;
 public class DatabaseHandler {
     Connection conn;
 
+    /**
+     * Connect to the database.
+     * @param database name of the db 
+     */
     public void connect(String database) {
         Properties properties = new Properties();
         properties.setProperty("user", "root");
