@@ -7,9 +7,12 @@ import org.json.JSONObject;
 
 import group10.util.JsonUtil;
 
+import group10.FileConfig;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.net.HttpURLConnection;
 import java.util.Base64;
 import java.net.URL;
@@ -36,8 +39,7 @@ public class GithubController {
         // compile repo
         // run tests
         // set commit
-        post("test1", "success", relevant_data.get("sha").toString());
-        post("test2", "failure", relevant_data.get("sha").toString());
+        setCommitStatus("test", "success", relevant_data.get("sha").toString());
 
         return "todo";
     };
@@ -49,12 +51,11 @@ public class GithubController {
      * @param test is test name
      * @param state is the test result 
      * @param sha is the commit id
-     * @return
      */
-    public static void post(String test, String state, String sha) {
-        String user = "dieflo4711";
-        String token = "password";
-        String repo = "test";
+    public static void setCommitStatus(String test, String state, String sha) {
+        String user = FileConfig.getRow(0);
+        String token = FileConfig.getRow(1);
+        String repo = FileConfig.getRow(2);
         String url = "https://api.github.com/repos/" + user + "/" + repo + "/statuses/" + sha;
         String json = "{\"state\": \"" + state + "\", \"description\": \"desc\", \"context\": \"" + test
                 + "\", \"target_url\": \"http://dleon.johvh.se\"}";
@@ -75,5 +76,6 @@ public class GithubController {
         } catch(Exception e) {
             e.printStackTrace();
         }
+        System.out.println();
     }
 }
