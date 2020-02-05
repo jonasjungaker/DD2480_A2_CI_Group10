@@ -7,46 +7,91 @@ import org.apache.maven.cli.MavenCli;
 
 public class CloneBuilder
 {
+    public String path;
+    public boolean buildSuccess;
+    public boolean testSuccess;
+    public String message; 
+    public String buildOutput;
+    /**
+     * creates a CloneBuilder object that can create the binaries of a maven project at path
+     * @param path local path to maven project which contains the pom file
+     */
+    public CloneBuilder(String path)
+    {
+        this.path = path;
+        //this.rebuild();
+    }
+
+    /**
+     * Builds the project and creates a buildoutput at this.buildOutput
+     * Also updates the builddata of the build in order to see if the build and tests were successful
+     */
+    public boolean rebuild()
+    {
+        this.buildOutput = this.build();
+        if (this.buildOutput.length() < 1)
+            this.checkBuildOutput();
+        return true;
+    }
+
     /**
      * builds a maven project at the designated path
-     * @param path
      * @return a string of the output of the build process for checking with the checkBuildOutput method
      */
-    public static String build(String path){
+    private String build(){
         MavenCli cli = new MavenCli();
 
         // Running build and logging output
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream output = new PrintStream(baos);
-        cli.doMain(new String[]{"clean", "install"}, path, output, output);
+        cli.doMain(new String[]{"clean", "install"}, this.path, output, output);
         output.close();
         return baos.toString();
     }
         
     /**
      * Checks the build output of the maven command line interface command doMain()
-     * @param buildString
-     * @return a BuildData object that contains build information on whether or not the build succeeded or not
+     * updates the CloneBuilder's builddata
+     * @return whether or not the build and tests were successful
      */
-    public static BuildData checkBuildOutput(String buildString)
+    public boolean checkBuildOutput()
     {
         // Checking if build was successful
-        if (buildString.contains("BUILD SUCCESS")){
-            return new BuildData(true, true, "Build successful");
+        if (this.buildOutput.contains("BUILD SUCCESS")){
+            this.buildSuccess = true;
+            this.testSuccess = true;
+            this.message = "Build successful with no errors\n";
+            return true;
         } 
-        else if (buildString.contains("COMPILATION ERROR")) {
+        else if (this.buildOutput.contains("COMPILATION ERROR")) {
             // Finding output error message
-            int beginIndex = buildString.indexOf("[ERROR] COMPILATION ERROR :");
-            int endIndex = buildString.indexOf("[INFO] BUILD FAILURE");
-            String message = "Compilation failure at build-time with errors:\n".concat(buildString.substring(beginIndex, endIndex));
-            return new BuildData(false, false, message);
+            int beginIndex = this.buildOutput.indexOf("[ERROR] COMPILATION ERROR :");
+            int endIndex = this.buildOutput.indexOf("[INFO] BUILD FAILURE");
+            this.message = "Compilation failure at build-time with errors:\n".concat(this.buildOutput.substring(beginIndex, endIndex));
+            this.buildSuccess = false;
+            this.testSuccess = false;
+            return false;
+        }
+        else if (this.buildOutput.contains("[ERROR] Failures:")) {
+            // Finding output error message
+            int beginIndex = this.buildOutput.indexOf("[ERROR] Failures:");
+            int endIndex = this.buildOutput.indexOf("[INFO] BUILD FAILURE");
+            this.message = "Test failure at build-time with errors:\n".concat(this.buildOutput.substring(beginIndex, endIndex));
+            this.buildSuccess = true;
+            this.testSuccess = false;
+            return false;
+        }
+        else if (this.buildOutput.contains("there is no POM in this directory")) {
+            this.buildSuccess = false;
+            this.testSuccess = false;
+            this.message = "The goal you specified requires a project to execute but there is no POM in this directory\n";
+            return false;
         }
         else {
-            // Finding output error message
-            int beginIndex = buildString.indexOf("[ERROR] Failures:");
-            int endIndex = buildString.indexOf("[INFO] BUILD FAILURE");
-            String message = "Test failure at build-time with errors:\n".concat(buildString.substring(beginIndex, endIndex));
-            return new BuildData(true, false, message);
+            this.buildSuccess = false;
+            this.testSuccess = false;
+            this.message = "Unidentified error while building the project\n";
+            return false;
         }
     }
 }

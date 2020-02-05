@@ -17,11 +17,12 @@ public class BuildTest
     @Test
     public void successfulTest()
     {
-        String buildOutput = "building...\nBUILD SUCCESSFUL\nbuilding...\n";
+        CloneBuilder builder = new CloneBuilder("");
+        builder.buildOutput = "building...\nBUILD SUCCESSFUL\nbuilding...\n";
 
-        BuildData bd = CloneBuilder.checkBuildOutput(buildOutput);
-        assertTrue(bd.buildSuccess);
-        assertTrue(bd.testSuccess);
+        builder.checkBuildOutput();
+        assertTrue(builder.buildSuccess);
+        assertTrue(builder.testSuccess);
     }
 
     /**
@@ -31,11 +32,12 @@ public class BuildTest
     public void testFailTest()
     {
         String message = "[ERROR] Failures:\nSome Message with data containing\ninformation about how the test failed\n";
-        String buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
+        CloneBuilder builder = new CloneBuilder("");
+        builder.buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
 
-        BuildData bd = CloneBuilder.checkBuildOutput(buildOutput);
-        assertTrue(bd.buildSuccess);
-        assertFalse(bd.testSuccess);
+        builder.checkBuildOutput();
+        assertTrue(builder.buildSuccess);
+        assertFalse(builder.testSuccess);
     }
 
     /**
@@ -45,10 +47,11 @@ public class BuildTest
     public void compileFailTest()
     {
         String message = "[ERROR] COMPILATION ERROR : \nSome Message with data containing\ninformation about how the test failed\n";
-        String buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
+        CloneBuilder builder = new CloneBuilder("");
+        builder.buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
 
-        BuildData bd = CloneBuilder.checkBuildOutput(buildOutput);
-        assertFalse(bd.buildSuccess);
-        assertFalse(bd.testSuccess);
+        builder.checkBuildOutput();
+        assertFalse(builder.buildSuccess);
+        assertFalse(builder.testSuccess);
     }
 }
