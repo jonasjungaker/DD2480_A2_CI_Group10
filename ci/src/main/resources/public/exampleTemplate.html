@@ -20,16 +20,24 @@
         <table class="build-list">
             <tbody>
             <tr>
-                <th>Build ID</th>
-                <th># Tests</th>
-                <th>Breakdown</th>
+                <th>Date</th>
+                <th>Time elapsed</th>
+                <th>Author</th>
                 <th>Branch</th>
                 <th>Status</th>
             </tr>
             <!--Each tr with td inside should be generated in a loop-->
             #foreach($build in $builds)
             <tr> 
-                <td> $build.date </td>
+                <td><a class="bold">$build.date</a></td>
+                <td><a class="bold">$build.elapsed</a></td>
+                <td> 
+                    <a class="bold">$build.author</a>  
+                </td>
+                <td>
+                    <a class="bold" href="https://github.com/JohanKJIP">$build.branch</a>
+                </td>
+                <td><a class="bold">$build.status</a></td>    
             </tr>
             #end
             <!--Ref to build url so that when you click, you
