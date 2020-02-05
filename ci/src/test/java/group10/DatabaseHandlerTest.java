@@ -32,7 +32,9 @@ public class DatabaseHandlerTest {
         for (Integer buildID : buildIds) {
             removeBuild(buildID);
         }
-        dbh.close();
+        if (dbh.conn != null) {
+            dbh.close();
+        } 
     }
 
     /**
