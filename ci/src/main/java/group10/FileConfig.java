@@ -38,7 +38,7 @@ public class FileConfig {
         String os = System.getProperty("os.name").toLowerCase();
         String user = System.getProperty("user.name");
         if(os.indexOf("win") >= 0) {
-            return "C:"+"\\Users\\"+user+"\\"+"Documents";
+            return "C:"+"\\Users\\"+user+"\\"+"Documents\\";
         } else if(os.indexOf("mac") >= 0) {
             return "/Users/"+user+"/Sites/";
         }
