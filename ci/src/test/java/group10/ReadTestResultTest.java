@@ -25,7 +25,7 @@ public class ReadTestResultTest {
         ReadTestResults rtr = new ReadTestResults();
         JSONObject json = rtr.read("/", "test-results");
         assertEquals(1, json.getInt("number_failed"));
-        assertEquals(2, json.getInt("number_success"));
+        assertEquals(1, json.getInt("number_success"));
         JSONObject n = (JSONObject) json.getJSONArray("failed").get(0);
         String cause = n.getString("cause");
         assertTrue(cause.length() <= 200);
