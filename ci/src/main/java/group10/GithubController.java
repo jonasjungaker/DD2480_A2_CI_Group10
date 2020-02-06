@@ -92,7 +92,7 @@ public class GithubController {
                 CloneBuilder cb = new CloneBuilder(dir);
                 boolean success = cb.rebuild();
                 System.out.println("Finsihed building project...");
-                System.out.println("Build success: " + cb.buildSuccess);
+                System.out.println("Build success: " + success);
 
                 // check results
                 System.out.println("Fetching the test results...");
@@ -101,7 +101,7 @@ public class GithubController {
                     JSONObject testResults = rts.read("/clone", "surefire-reports");
                     System.out.println("Adding test results to database...");
                     CIServer.dbh.addTestsToBuild(buildID, testResults);
-                    if(!cb.buildSuccess){
+                    if(false) {
                         setCommitStatus(relevant_data, null, "buildFailed", buildID);
                     }else if (testResults.getBoolean("success")) {
                         System.out.println("Passed all the tests!!");
@@ -148,7 +148,7 @@ public class GithubController {
         String description = "";
         String target_url = "http://johvh.se/build/"+ buildID;
 
-        if(state.equals("builedFailed")){
+        if(state.equals("buildFailed")){
             state = "failure";
             description = "Failed while building project";
         }else if(state.equals("testsFailed")){
@@ -165,7 +165,7 @@ public class GithubController {
         
         String json = "{\"state\": \"" + state + "\", \"description\": \""+ description +"\", \"context\": \"G10ci" +
                     "\", \"target_url\": \""+ target_url+"\"}";
-        
+        System.out.println(json); 
         try {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
