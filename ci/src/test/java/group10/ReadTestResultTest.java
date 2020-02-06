@@ -27,7 +27,11 @@ public class ReadTestResultTest {
         assertEquals(1, json.getInt("number_failed"));
         assertEquals(2, json.getInt("number_success"));
         JSONObject n = (JSONObject) json.getJSONArray("failed").get(0);
-        assertTrue(n.getString("cause").contains("AssertionError"));
+        String cause = n.getString("cause");
+        assertTrue(cause.length() <= 200);
+        assertTrue(cause.contains("AssertionError"));
+        assertTrue(n.getString("time").contains("0.005"));
+        assertTrue(n.getString("classname").contains("AppTest"));
     }
 
     /**
@@ -46,7 +50,11 @@ public class ReadTestResultTest {
 
         JSONObject n = (JSONObject) json.getJSONArray("succeded").get(0);
         assertTrue(n.getString("name").contains("shouldAnswerWithTrue"));
+        assertTrue(n.getString("classname").contains("AppTest"));
+        assertTrue(n.getString("time").contains("0.005"));
         JSONObject n2 = (JSONObject) json.getJSONArray("succeded").get(1);
         assertTrue(n2.getString("name").contains("cloneTest"));
+        assertTrue(n2.getString("classname").contains("CloneTest"));
+        assertTrue(n2.getString("time").contains("3.034"));
     }
 }
