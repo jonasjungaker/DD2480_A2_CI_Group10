@@ -46,7 +46,7 @@ public class ReadTestResultTest {
         ReadTestResults rtr = new ReadTestResults();
         JSONObject json = rtr.read("/", "test-results-pass");
         assertEquals(0, json.getInt("number_failed"));
-        assertEquals(3, json.getInt("number_success"));
+        assertEquals(1, json.getInt("number_success"));
 
         JSONObject n2 = (JSONObject) json.getJSONArray("succeded").get(0);
         assertTrue(n2.getString("name").contains("cloneTest"));
