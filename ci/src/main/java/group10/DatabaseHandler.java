@@ -58,7 +58,6 @@ public class DatabaseHandler {
                     return (int) generatedKeys.getLong(1);
                 }
             } catch (SQLException e) {
-                //e.printStackTrace();
                 System.out.println("Invalid insert query in addBuild");
             }
         }
@@ -78,9 +77,8 @@ public class DatabaseHandler {
             String query = "insert into test (build_id, name, message, elapsed, class) values (?,?,?,?,?)";
             for (int i = 0; i < failed.length(); i++) {
                 JSONObject result = failed.getJSONObject(i);
-                System.out.println(result);
                 String name = (String) result.get("name");
-                double elapsed = (double) result.get("time");
+                double elapsed = result.getDouble("time");
                 String className = (String) result.get("classname");
                 String cause = (String) result.get("cause");
 
@@ -94,6 +92,7 @@ public class DatabaseHandler {
 
                     preparedStmt.execute();
                 } catch (SQLException e) {
+                    e.printStackTrace();
                     System.out.println("Adding failed tests failed");
                     return false;
                 }
@@ -105,7 +104,7 @@ public class DatabaseHandler {
             for (int i = 0; i < passed.length(); i++) {
                 JSONObject result = passed.getJSONObject(i);
                 String name = (String) result.get("name");
-                double elapsed = (double) result.get("time");
+                double elapsed = result.getDouble("time");
                 String className = (String) result.get("classname");
 
                 try {
@@ -128,11 +127,11 @@ public class DatabaseHandler {
                         "elapsed = ?," +
                         "status = ?," +
                         "number_passed = ?," +
-                        "number_failed = ?" + 
+                        "number_failed = ? " + 
                         "WHERE build_id = ?";
             try {
                 PreparedStatement preparedStmt = conn.prepareStatement(query);
-                preparedStmt.setDouble(1, (double)results.get("time"));
+                preparedStmt.setDouble(1, results.getDouble("time"));
                 if ((boolean)results.get("success")) {
                     preparedStmt.setString(2, "passed");
                 } else {
@@ -144,6 +143,7 @@ public class DatabaseHandler {
 
                 preparedStmt.execute(); 
             } catch (SQLException e) {
+                e.printStackTrace();
                 System.out.println("Failed update of build meta data");
                 return false;
             }
@@ -229,7 +229,6 @@ public class DatabaseHandler {
                     test.put("elapsed", rs.getString("elapsed"));
                     test.put("className", rs.getString("class"));
                     String message = rs.getString("message");
-                    System.out.println(message);
                     if (message == null) {
                         passedTests.put(test);
                     } else {

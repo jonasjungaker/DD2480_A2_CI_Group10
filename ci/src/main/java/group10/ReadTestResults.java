@@ -26,7 +26,6 @@ public class ReadTestResults {
      */
     public JSONObject read(String root, String fileName) throws ParserConfigurationException {
         File reportDirectory = p.fileDFS(root, fileName);
-
         //Prepare JSONObject to return
         JSONObject json = new JSONObject();
         boolean success = false;
@@ -34,6 +33,7 @@ public class ReadTestResults {
         int number_success = 0;
         JSONArray failed = new JSONArray();
         JSONArray succeded = new JSONArray();
+        double summedTime = 0;
         
         //Get the values needed from the xml file
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -54,6 +54,7 @@ public class ReadTestResults {
                         test.put("name", nodeTestCases.item(i).getAttributes().getNamedItem("name").getTextContent());
                         test.put("test_number", i);
                         test.put("time", nodeTestCases.item(i).getAttributes().getNamedItem("time").getTextContent());
+                        summedTime += test.getDouble("time");
                         test.put("classname", nodeTestCases.item(i).getAttributes().getNamedItem("classname").getTextContent());
                         //If test failed add details of fail
                         if(child != null){
@@ -81,6 +82,7 @@ public class ReadTestResults {
         json.put("number_success", number_success);
         json.put("failed", failed);
         json.put("succeded", succeded);
+        json.put("time", summedTime);
 
         return json;
     }

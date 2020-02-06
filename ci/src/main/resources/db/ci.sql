@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `ci`.`test` (
   `class` VARCHAR(100) NOT NULL,
   `message` VARCHAR(200) NULL,
   PRIMARY KEY (`passed_id`),
-  INDEX `fk_table1_Build_idx` (`build_id` ASC) VISIBLE,
+  INDEX `fk_table1_Build_idx` (`build_id` ASC),
   CONSTRAINT `fk_table1_Build`
     FOREIGN KEY (`build_id`)
     REFERENCES `ci`.`build` (`build_id`)

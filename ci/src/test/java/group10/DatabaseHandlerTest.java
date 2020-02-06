@@ -44,9 +44,7 @@ public class DatabaseHandlerTest {
         try {
             Statement trunc = dbh.conn.createStatement();
             trunc.executeUpdate("delete from build where build_id = " + buildID);
-            trunc.executeUpdate("delete from passedTest where build_id = " + buildID);
-            trunc.executeUpdate("delete from failedTest where build_id = " + buildID);
-            
+            trunc.executeUpdate("delete from test where build_id = " + buildID);
         } catch (SQLException e) {
             System.out.println("Failed to remove build: " + buildID);
         }
@@ -168,18 +166,21 @@ public class DatabaseHandlerTest {
     public void getSingleBuildTest() {
         // do not run tests if no db connection
         if (dbh.conn != null) {
-            int buildID = dbh.addBuild("pending", "pepe", "cool");            
+            int buildID = dbh.addBuild("pending", "pepe", "cool");          
             buildIds.add(buildID);
+
+            JSONObject build = dbh.getBuild(buildID);
+            assertEquals("pending", build.getString("status"));
 
             JSONObject results = new JSONObject("{\"succeded\":[{\"name\":\"fileDFSTest\",\"test_number\":0, \"time\":0.05,\"classname\":\"spongebob\"}],\"time\":2.0,\"number_failed\":1,\"success\":false,\"number_success\":1,\"failed\":[{\"name\":\"shouldAnswerWithTrue\",\"cause\":\"\\n    java.lang.AssertionError\\n\\tat group10.AppTest.shouldAnswerWithTrue(AppTest.java:18)\\n\\n  \",\"test_number\":0,\"time\":0.03,\"classname\":\"group10.AppTest\"}]}");
             dbh.addTestsToBuild(buildID, results);
 
-            JSONObject build = dbh.getBuild(buildID);
+            build = dbh.getBuild(buildID);
             JSONArray passedTests = (JSONArray) build.get("passed_tests");
             assertEquals(1, passedTests.length());
             JSONArray failedTests = (JSONArray) build.get("failed_tests");
             assertEquals(1, failedTests.length());
-            assertEquals("pending", (String)build.get("status"));
+            assertEquals("failed", build.getString("status"));
         } 
     }
 }

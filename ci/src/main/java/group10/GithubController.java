@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -15,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group10.util.JsonUtil;
+import group10.util.Path;
 
 import group10.FileConfig;
 
@@ -39,45 +42,78 @@ public class GithubController {
      * @throws IOException
      * @throws JSONException
      */
-    public static String handlePost(Request request, Response response){
+    public static String handlePost(Request request, Response response) {
+        System.out.println("Received a request...");
+
         // turn data string into a map structure
-        System.out.println(request.body());
+        System.out.println("Extracting relevant data...");
         JSONObject all_data = json.toMap(request.body());
         JSONObject relevant_data = json.getRelevantData(all_data);
-        System.out.println(relevant_data.toString());
 
-        // todo set commit pending
         // clone repo
-        File cloneDirectoryPath = new File("clone");
+        System.out.println("Began cloning repository...");
+        File cloneDirectoryPath = new File("clone/");
         boolean cloned = false;
         try {
             cloned = cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"),
                     cloneDirectoryPath);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println("Failed cloning with: "+ e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed cloning with: "+ e.getMessage());
-        }
-        
-        // compile repo
-        // run tests
-        // set commit
-        setCommitStatus("test", "success", relevant_data.get("sha").toString());
-
-        //tear down the session
-        try {
-            tearDown(cloneDirectoryPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed tearDown "+ e.getMessage());
+        } catch (JSONException | IOException  e) {
+            System.out.println("Failed cloning with: " + e.getMessage());
         }
 
-        //Check that everything went as it should
-        if(cloned){
-            return "success";
+        // only continue if we managed to clone
+        if (cloned) {
+            System.out.println("Finished cloning repository...");
+
+            // set pending statuses
+            boolean exists = setCommitStatus(relevant_data.getString("statuses_url"), "pending", relevant_data.getString("sha"));
+            if (exists) {
+                System.out.println("Saving build in database...");
+                int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
+
+                // build
+                System.out.println("Started building project...");
+                Path p = new Path();
+                File pom = p.fileDFS("/clone", "pom.xml");
+                String dir = pom.getAbsolutePath().replace("pom.xml", "");
+                dir = dir.substring(0, dir.length()-1);
+                CloneBuilder cb = new CloneBuilder(dir);
+                boolean success = cb.rebuild();
+                System.out.println("Finsihed building project...");
+                System.out.println("Build success: " + cb.buildSuccess);
+
+                // check results
+                System.out.println("Fetching the test results...");
+                ReadTestResults rts = new ReadTestResults();
+                try {
+                    JSONObject testResults = rts.read("/clone", "surefire-reports");
+                    System.out.println("Adding test results to database...");
+                    CIServer.dbh.addTestsToBuild(buildID, testResults);
+                    if (testResults.getBoolean("success")) {
+                        System.out.println("Passed all the tests!!");
+                        setCommitStatus(relevant_data.getString("statuses_url"), "success", relevant_data.getString("sha"));
+                    } else {
+                        System.out.println("All tests did NOT pass.");
+                        setCommitStatus(relevant_data.getString("statuses_url"), "failure", relevant_data.getString("sha"));
+                    }
+
+                } catch (ParserConfigurationException e1) {
+                    e1.printStackTrace();
+                    return "failed";
+                }
+
+                //tear down the session
+                try {
+                    tearDown(cloneDirectoryPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Failed tearDown "+ e.getMessage());
+                }
+                System.out.println("Job finished.");
+                return "success";
+            }
         }
+        System.out.println("Job finished.");
         return "failed";
     };
 
@@ -89,13 +125,12 @@ public class GithubController {
      * @param state is the test result 
      * @param sha is the commit id
      */
-    public static void setCommitStatus(String test, String state, String sha) {
+    public static boolean setCommitStatus(String statuses_url, String state, String sha) {
         String user = FileConfig.getRow(0);
         String token = FileConfig.getRow(1);
-        String repo = FileConfig.getRow(2);
-        String url = "https://api.github.com/repos/" + user + "/" + repo + "/statuses/" + sha;
-        String json = "{\"state\": \"" + state + "\", \"description\": \"desc\", \"context\": \"" + test
-                + "\", \"target_url\": \"http://dleon.johvh.se\"}";
+        String url = statuses_url.replace("{sha}", sha);
+        String json = "{\"state\": \"" + state + "\", \"description\": \"desc\", \"context\": \"G10ci" +
+                    "\", \"target_url\": \"http://johvh.se\"}";
         
         try {
             URL obj = new URL(url);
@@ -110,14 +145,12 @@ public class GithubController {
             wr.close();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             in.close();
+            return true;
         } catch(Exception e) {
-            e.printStackTrace();
+            System.out.println("Failed to set commit message: " + e.getMessage());
         }
-        System.out.println();
+        return false;
     }
-
-
-
 
      /**
      * Clone the given repository & branch from git to the specified file
@@ -142,7 +175,7 @@ public class GithubController {
             git = gitclone.call();
             return true;
         } catch (GitAPIException e) {
-            e.printStackTrace();
+            System.out.println("Failed cloning with: " + e.getMessage());
             return false;
         }
     }

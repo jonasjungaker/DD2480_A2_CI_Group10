@@ -1,33 +1,37 @@
 package group10;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.apache.maven.cli.MavenCli;
 
-public class CloneBuilder
-{
+public class CloneBuilder {
     public String path;
     public boolean buildSuccess;
     public boolean testSuccess;
-    public String message; 
+    public String message;
     public String buildOutput;
+
     /**
-     * creates a CloneBuilder object that can create the binaries of a maven project at path
+     * creates a CloneBuilder object that can create the binaries of a maven project
+     * at path
+     * 
      * @param path local path to maven project which contains the pom file
      */
-    public CloneBuilder(String path)
-    {
+    public CloneBuilder(String path) {
         this.path = path;
-        //this.rebuild();
+        // this.rebuild();
     }
 
     /**
-     * Builds the project and creates a buildoutput at this.buildOutput
-     * Also updates the builddata of the build in order to see if the build and tests were successful
+     * Builds the project and creates a buildoutput at this.buildOutput Also updates
+     * the builddata of the build in order to see if the build and tests were
+     * successful
      */
-    public boolean rebuild()
-    {
+    public boolean rebuild() {
         this.buildOutput = this.build();
         if (this.buildOutput.length() < 1)
             this.checkBuildOutput();
@@ -36,17 +40,25 @@ public class CloneBuilder
 
     /**
      * builds a maven project at the designated path
-     * @return a string of the output of the build process for checking with the checkBuildOutput method
+     * 
+     * @return a string of the output of the build process for checking with the
+     *         checkBuildOutput method
      */
-    private String build(){
-        MavenCli cli = new MavenCli();
+    private String build() {
 
-        // Running build and logging output
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream output = new PrintStream(baos);
-        cli.doMain(new String[]{"clean", "install"}, this.path, output, output);
-        output.close();
-        return baos.toString();
+        Process p;
+        try {
+            p = new ProcessBuilder(System.getProperty("user.dir") + "/run.sh", this.path).start();
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ( (line = reader.readLine()) != null ) builder.append(line).append(System.getProperty("line.separator"));
+            return builder.toString();
+        } catch (IOException | InterruptedException  e) {
+            e.printStackTrace();
+        }
+        return "failed";
     }
         
     /**
