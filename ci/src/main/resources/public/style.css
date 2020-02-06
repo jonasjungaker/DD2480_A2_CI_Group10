@@ -124,6 +124,7 @@ h1, h2 {
 #singe-build-list {
     width: 100%;
     margin: 0 auto;
+    table-layout: fixed;
 }
 
 #singe-build-list tr {
@@ -229,7 +230,7 @@ h1, h2 {
     padding: 20px 20px 22px 20px;
     background: white;
     position: relative;
-    top: 30;
+    top: 80;
     margin: 0 auto;
     box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
     border-radius: 3px;
