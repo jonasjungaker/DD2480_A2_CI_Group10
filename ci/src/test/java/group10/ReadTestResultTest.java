@@ -47,10 +47,10 @@ public class ReadTestResultTest {
         JSONObject json = rtr.read("/", "test-results-pass");
         assertEquals(0, json.getInt("number_failed"));
         assertEquals(1, json.getInt("number_success"));
-
+	
         JSONObject n2 = (JSONObject) json.getJSONArray("succeded").get(0);
-        assertTrue(n2.getString("name").contains("cloneTest"));
-        assertTrue(n2.getString("classname").contains("CloneTest"));
-        assertTrue(n2.getString("time").contains("3.034"));
+        assertTrue(n2.getString("name").contains("shouldAnswerWithTrue"));
+        assertTrue(n2.getString("classname").contains("AppTest"));
+        assertTrue(n2.getString("time").contains("0.005"));
     }
 }
