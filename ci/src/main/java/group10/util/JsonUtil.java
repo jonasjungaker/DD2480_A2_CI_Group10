@@ -36,6 +36,7 @@ public class JsonUtil {
         relevant_data.put("ref", all_data.get("ref"));
         relevant_data.put("clone_url", repository.get("clone_url"));
         relevant_data.put("author", pusher.get("name"));
+        relevant_data.put("statuses_url", repository.get("statuses_url"));
         return relevant_data;
     }
 }
