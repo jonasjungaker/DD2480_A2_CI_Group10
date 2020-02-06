@@ -19,9 +19,17 @@ import org.json.JSONObject;
 import group10.util.JsonUtil;
 import group10.util.Path;
 
+import group10.FileConfig;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.util.Base64;
+import java.net.URL;
+
 public class GithubController {
     private static JsonUtil json = new JsonUtil();
-    private static CIServer ciServer = new CIServer();
     static Git git;
     File cloneDirectoryPath;
 
@@ -36,15 +44,11 @@ public class GithubController {
      */
     public static String handlePost(Request request, Response response) {
         System.out.println("Received a request...");
-        // TODO: set commit pending
 
         // turn data string into a map structure
         System.out.println("Extracting relevant data...");
         JSONObject all_data = json.toMap(request.body());
         JSONObject relevant_data = json.getRelevantData(all_data);
-
-        System.out.println("Saving build in database...");
-        int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
 
         // clone repo
         System.out.println("Began cloning repository...");
@@ -60,6 +64,13 @@ public class GithubController {
         // only continue if we managed to clone
         if (cloned) {
             System.out.println("Finished cloning repository...");
+
+            // set pending statuses
+            setCommitStatus(relevant_data.getString("statuses_url"), "pending", relevant_data.getString("sha"));
+            System.out.println("Saving build in database...");
+            int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
+
+
             // build
             System.out.println("Started building project...");
             Path p = new Path();
@@ -80,8 +91,10 @@ public class GithubController {
                 CIServer.dbh.addTestsToBuild(buildID, testResults);
                 if (testResults.getBoolean("success")) {
                     System.out.println("Passed all the tests!!");
+                    setCommitStatus(relevant_data.getString("statuses_url"), "success", relevant_data.getString("sha"));
                 } else {
                     System.out.println("All tests did NOT pass.");
+                    setCommitStatus(relevant_data.getString("statuses_url"), "failure", relevant_data.getString("sha"));
                 }
 
             } catch (ParserConfigurationException e1) {
@@ -102,6 +115,40 @@ public class GithubController {
         System.out.println("Job finished.");
         return "failed";
     };
+
+
+    /**
+     * Method that sends pass and fail for the build results.
+     * 
+     * @param test is test name
+     * @param state is the test result 
+     * @param sha is the commit id
+     */
+    public static void setCommitStatus(String statuses_url, String state, String sha) {
+        String user = FileConfig.getRow(0);
+        String token = FileConfig.getRow(1);
+        String url = statuses_url.replace("{sha}", sha);
+        String json = "{\"state\": \"" + state + "\", \"description\": \"desc\", \"context\": \"G10ci" +
+                    "\", \"target_url\": \"http://johvh.se\"}";
+        
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty ("Authorization", "Basic " + Base64.getEncoder().encodeToString((user+":"+token).getBytes()));
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(json);
+            wr.flush();
+            wr.close();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            in.close();
+        } catch(Exception e) {
+            System.out.println("Failed to set commit message: " + e.getMessage());
+        }
+        System.out.println();
+    }
 
      /**
      * Clone the given repository & branch from git to the specified file
@@ -147,10 +194,5 @@ public class GithubController {
         if(file.exists()){
             FileUtils.deleteDirectory(file);
         }
-    }
-
-    public static void main(String[] args) {
-        
-        //System.out.println(pom);
     }
 }
