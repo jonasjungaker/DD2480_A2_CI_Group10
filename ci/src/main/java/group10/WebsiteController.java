@@ -15,7 +15,7 @@ public class WebsiteController {
      * return response.
      * @param request from website to server
      * @param response send back info from database
-     * @return
+     * @return build history from database
      */
     public static String handleGet(Request request, Response response) 
     {

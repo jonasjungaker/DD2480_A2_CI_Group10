@@ -1,12 +1,9 @@
 package group10;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.apache.maven.cli.MavenCli;
 
 public class CloneBuilder {
     public String path;
@@ -27,19 +24,19 @@ public class CloneBuilder {
     }
 
     /**
-     * Builds the project and creates a buildoutput at this.buildOutput Also updates
-     * the builddata of the build in order to see if the build and tests were
-     * successful
+     * Builds the project and creates a buildoutput at this.buildOutput
+     * Also updates the builddata of the build in order to see if the build and tests were successful
+     * @return true if rebuild succeded false otherwise
      */
     public boolean rebuild() {
         this.buildOutput = this.build();
         if (this.buildOutput.length() < 1)
-            this.checkBuildOutput();
-        return true;
+            return this.checkBuildOutput();
+        return false;
     }
 
     /**
-     * builds a maven project at the designated path
+     * Builds a maven project at the designated path
      * 
      * @return a string of the output of the build process for checking with the
      *         checkBuildOutput method

@@ -32,7 +32,6 @@ public class DatabaseHandler {
 
     /**
      * Insert a build into the database.
-     * @param elapsed time taken to run tests
      * @param status pending, pass or success
      * @param author who made the push
      * @param branch branch the tests was run on
