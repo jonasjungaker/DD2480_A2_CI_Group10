@@ -21,23 +21,43 @@
             <tbody>
             <tr>
                 <th>Date</th>
-                <th>Time elapsed</th>
+                <th># Tests</th>
                 <th>Author</th>
+                <th style="width: 30%;">Breakdown</th>
                 <th>Branch</th>
                 <th>Status</th>
             </tr>
             <!--Each tr with td inside should be generated in a loop-->
             #foreach($build in $builds)
             <tr> 
-                <td><a class="bold">$build.date</a></td>
-                <td><a class="bold">$build.elapsed</a></td>
+                <td><a class="bold" href="/build/$build.buildID">$build.date</a></td>
+                #if ($build.status == "pending") 
+                    <td>-</td>
+                #else
+                    #set($total = ($build.number_passed + $build.number_failed))
+                    <td>$total</td>
+                #end
                 <td> 
                     <a class="bold">$build.author</a>  
                 </td>
                 <td>
-                    <a class="bold" href="https://github.com/JohanKJIP">$build.branch</a>
+                    #if ($build.status == "pending") 
+                        -
+                    #else
+                        <div class="progress-bar">
+                            <!--width is completion amount, e.g. 56% of tests passed-->
+                            #if ($build.ratio == 100)
+                                <div class="progress full" style="height:15px;width:$build.ratio%"></div>
+                            #else
+                                <div class="progress" style="height:15px;width:$build.ratio%"></div>
+                            #end
+                        </div>  
+                    #end
                 </td>
-                <td><a class="bold">$build.status</a></td>    
+                <td>$build.branch</td>
+                <td>
+                    <span class="status $build.status">$build.status</span>
+                </td> 
             </tr>
             #end
             <!--Ref to build url so that when you click, you

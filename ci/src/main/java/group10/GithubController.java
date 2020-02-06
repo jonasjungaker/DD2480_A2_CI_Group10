@@ -66,7 +66,6 @@ public class GithubController {
         if (cloned) {
             System.out.println("Finished cloning repository...");
 
-            
             // set pending statuses
             boolean exists = setCommitStatus(relevant_data, null, "pending", 0);
             if (exists) {
@@ -82,7 +81,7 @@ public class GithubController {
                 CloneBuilder cb = new CloneBuilder(dir);
                 boolean success = cb.rebuild();
                 System.out.println("Finsihed building project...");
-                System.out.println("Build success: " + cb.buildSuccess);
+                System.out.println("Build success: " + success);
 
                 // check results
                 System.out.println("Fetching the test results...");

@@ -22,10 +22,7 @@ public class WebsiteController {
      * @return
      */
     public static String handleGet(Request request, Response response) {
-        //JSONArray model = new JSONArray();
-        // todo: get data from DB
-        
-        JSONArray builds = new JSONArray("[{\"date\":\"2020-02-05\",\"elapsed\":3.03,\"number_failed\":0,\"author\":\"pepe\",\"buildID\":70,\"number_passed\":0,\"branch\":\"cool\",\"status\":\"pending\"},{\"date\":\"2020-02-05\",\"elapsed\":0.02,\"number_failed\":0,\"author\":\"pepega\",\"buildID\":71,\"number_passed\":0,\"branch\":\"korv\",\"status\":\"passed\"}]");
+        JSONArray builds = CIServer.dbh.getBuilds(0, 25);
         Map<String, Object> buildModel = new HashMap<>();
         buildModel.put("builds", builds);
         

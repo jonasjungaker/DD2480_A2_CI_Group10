@@ -180,6 +180,11 @@ public class DatabaseHandler {
                     build.put("elapsed", rs.getDouble("elapsed"));
                     build.put("number_passed", rs.getInt("number_passed"));
                     build.put("number_failed", rs.getInt("number_failed"));
+                    if (!build.getString("status").equals("pending")) {
+                        double ratio = (double)build.getInt("number_passed")/(double)(build.getInt("number_passed") + build.getInt("number_failed"));
+                        ratio *= 100;
+                        build.put("ratio", ratio);
+                    }
                     builds.put(build);
                 }
                 rs.close();
