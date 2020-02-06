@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 public class Path {
     public static final String HOME = "/";
     public static final String GITHUB = "/api/github";
+    public static final String BUILD = "/build/:buildid";
 
     /**
      * Method to find a File with the name 

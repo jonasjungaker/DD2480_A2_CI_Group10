@@ -1,0 +1,176 @@
+<html class="gr__"><head>
+    <title>G10ci</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&amp;display=swap" rel="stylesheet"> 
+    </head>
+    
+    <body data-gr-c-s-loaded="true">
+        <div id="shdow-box">
+            <div id="test-message-cont">
+                <div id="test-message-header"><h2>Test message</h2></div>
+                <div class="test-message" id="box1">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting 
+                    industry. Lorem Ipsum has been the industry's standard dummy text 
+                    ever since the 1500s, when an unknown printer took a galley of type 
+                    and scrambled it to make a type specimen book. It has survived not only 
+                    five centuries.
+                </div>
+                <div class="test-message" id="box2">
+                    but also the leap into electronic typesetting, remaining essentially 
+                    unchanged. It was popularised in the 1960s with the release of Letraset 
+                    sheets containing Lorem Ipsum passages, and more recently with desktop 
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </div>
+                <div class="test-message" id="box3">
+                    It is a long established fact that a reader will be distracted by the readable 
+                    content of a page when looking at its layout. The point of using Lorem Ipsum 
+                    is that it has a more-or-less normal distribution of letters.
+                </div>
+                <div class="test-message" id="box4">
+                    but also the leap into electronic typesetting, remaining essentially 
+                    unchanged. It was popularised in the 1960s with the release of Letraset 
+                    sheets containing
+                </div>
+            </div>
+        </div>
+        <!--This is just the top bar with logo-->
+        <div class="top-bar">
+            <div class="logo">
+                <span id="g10">G10</span>
+                <span>ci</span>
+            </div>
+        </div>
+        <!--List of builds-->
+        <div class="list" id="single-list">
+            <!--<h1 class="header">Build # for feat/example on 2020-02-01</h1>-->
+            <!--Show information for each test (test name, status, time taken)-->
+            <div id="sidebar">
+                <div id="sidebar-header">
+                    <h1>Build 6</h1>
+                    <h2 class="failed">Failed</h2>
+                </div>
+                <div id="sidebar-main-container">
+                    <table id="sidebar-table">
+                        <tbody>
+                            <tr>
+                                <th>Author:</th>
+                                <td>
+                                    <span>dieflo4711</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Branch:</th>
+                                <td>
+                                    <span>feat/yolo</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Tests:</th>
+                                <td>
+                                    <span>13</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date:</th>
+                                <td>
+                                    <span>2020-01-03</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Elapsed:</th>
+                                <td>
+                                    <span>4.32 s</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="main-test-container">
+                <h1 class="failed">Failed tests - 3</h1>
+                <div class="test-container">
+                    <table class="build-list" id="singe-build-list">
+                        <tbody>
+                            <tr>
+                                <th>Test</th>
+                                <th>Message</th>
+                                <th>Class</th>
+                                <th>Elapsed (s)</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Test success</span>
+                                </td>
+                                <td>
+                                    <span class="view-message-button" id="1">View</span>
+                                </td>
+                                <td>
+                                    <span>CiServer</span>
+                                </td>
+                                <td>
+                                    <span>0.354</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Test failure</span>
+                                </td>
+                                <td>
+                                    <span class="view-message-button" id="2">View</span>
+                                </td>
+                                <td>
+                                    <span>CiServer</span>
+                                </td>
+                                <td>
+                                    <span>0.001</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Test exception 1</span>
+                                </td>
+                                <td>
+                                    <span class="view-message-button" id="3">View</span>
+                                </td>
+                                <td>
+                                    <span>CiServer</span>
+                                </td>
+                                <td>
+                                    <span>0.94</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h1 class="passed">Passed tests - 9</h1>
+                <div class="test-container">
+                    <table class="build-list" id="singe-build-list">
+                        <tbody>
+                            <tr>
+                                <th>Test</th>
+                                <th>Message</th>
+                                <th>Class</th>
+                                <th>Elapsed (s)</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Test success</span>
+                                </td>
+                                <td>
+                                    <span class="view-message-button" id="4">View</span>
+                                </td>
+                                <td>
+                                    <span>CiServer</span>
+                                </td>
+                                <td>
+                                    <span>0.354</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script src="js/script.js"></script>
+    </body>
+</html>

@@ -56,5 +56,4 @@
     <property name="java.class.version" value="57.0"/>
   </properties>
   <testcase name="cloneTest" classname="group10.CloneTest" time="3.034"/>
-  <testcase name="branchNotExistTest" classname="group10.CloneTest" time="1.453"/>
 </testsuite>

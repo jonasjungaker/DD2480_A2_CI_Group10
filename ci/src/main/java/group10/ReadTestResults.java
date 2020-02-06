@@ -22,10 +22,13 @@ public class ReadTestResults {
      * @param fileName the file name to the result xml files from tests
      * @param root the root of the file with results
      * @return jsonobject with info from tests
-     * @throws ParserConfigurationException
+     * @throws ParserConfigurationException if failing to instanciate DocumentBuilderFactory
      */
     public JSONObject read(String root, String fileName) throws ParserConfigurationException {
+        System.out.println(root);
+        System.out.println(fileName);
         File reportDirectory = p.fileDFS(root, fileName);
+        System.out.println(reportDirectory);
         //Prepare JSONObject to return
         JSONObject json = new JSONObject();
         boolean success = false;
