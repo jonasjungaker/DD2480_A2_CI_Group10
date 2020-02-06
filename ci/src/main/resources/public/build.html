@@ -19,7 +19,7 @@
             <div id="sidebar">
                 <div id="sidebar-header">
                     <h1>Build 6</h1>
-                    <h2 class="failed">Failed</h2>
+                    <span class="status failed">failed</span>
                 </div>
                 <div id="sidebar-main-container">
                     <!--<h2>Tests: 13</h2>
@@ -29,27 +29,33 @@
                     <table id="sidebar-table">
                         <tbody>
                             <tr>
-                                <th>Test:</th>
+                                <th>Author</th>
                                 <td>
-                                    <span>13</span>
+                                    <span>Cool guy</span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Pending:</th>
+                                <th>Branch</th>
                                 <td>
-                                    <span>1</span>
+                                    <span>master</span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Elapsed:</th>
+                                <th>Tests</th>
                                 <td>
-                                    <span>4.32 sec</span>
+                                    <span>17</span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Date:</th>
+                                <th>Date</th>
                                 <td>
                                     <span>2020-01-03</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Elapsed</th>
+                                <td>
+                                    <span>4.32 s</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -57,7 +63,8 @@
                 </div>
             </div>
             <div id="main-test-container">
-                <h1 class="failed">Failed tests - 3</h1>
+                <div class="blob redblob"></div>
+                <h1>Failed tests</h1>
                 <div class="test-container">
                     <table class="build-list" id="singe-build-list">
                         <tbody>
@@ -72,7 +79,7 @@
                                     <span>Test success</span>
                                 </td>
                                 <td>
-                                    <span class="status failed">Failed</span>
+                                    <span class="status failed">failed</span>
                                 </td>
                                 <td>
                                     <span>CiServer</span>
@@ -86,7 +93,7 @@
                                     <span>Test failure</span>
                                 </td>
                                 <td>
-                                    <span class="status failed">Failed</span>
+                                    <span class="status failed">failed</span>
                                 </td>
                                 <td>
                                     <span>CiServer</span>
@@ -100,7 +107,7 @@
                                     <span>Test exception 1</span>
                                 </td>
                                 <td>
-                                    <span class="status failed">Failed</span>
+                                    <span class="status failed">failed</span>
                                 </td>
                                 <td>
                                     <span>CiServer</span>
@@ -112,7 +119,8 @@
                         </tbody>
                     </table>
                 </div>
-                <h1 class="passed">Passed tests - 9</h1>
+                <div class="blob greenblob"></div>
+                <h1>Passed tests</h1>
                 <div class="test-container">
                     <table class="build-list" id="singe-build-list">
                         <tbody>
@@ -127,7 +135,7 @@
                                     <span>Test success</span>
                                 </td>
                                 <td>
-                                    <span class="status passed">Passed</span>
+                                    <span class="status passed">passed</span>
                                 </td>
                                 <td>
                                     <span>CiServer</span>
