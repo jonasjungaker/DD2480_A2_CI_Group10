@@ -18,7 +18,7 @@ public class GithubControllerTest {
 
     @After
     public void tearDown() throws IOException {
-        GithubController.tearDown(new File("clone"));
+        GithubController.tearDown(new File("testCloneDirectory"));
     }
 
     /**
