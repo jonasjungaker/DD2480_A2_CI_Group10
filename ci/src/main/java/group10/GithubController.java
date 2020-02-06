@@ -59,23 +59,10 @@ public class GithubController {
         } catch (JSONException e) {
             System.out.println("Failed cloning with: " + e.getMessage());
         }
-        // compile repo
-        // run tests
-        // set commit
-        setCommitStatus("test", "success", relevant_data.get("sha").toString());
-
-        //tear down the session
-        try {
-            tearDown(cloneDirectoryPath);
-        } catch (IOException IOe) {
-            IOe.printStackTrace();
-            System.out.println("Failed tearDown "+ IOe.getMessage());
-        }
 
         // only continue if we managed to clone
         if (cloned) {
             System.out.println("Finished cloning repository...");
-
             
             // set pending statuses
             boolean exists = setCommitStatus(relevant_data, null, "pending", 0);
@@ -95,37 +82,46 @@ public class GithubController {
                 System.out.println("Build success: " + success);
 
                 // check results
-                System.out.println("Fetching the test results...");
-                ReadTestResults rts = new ReadTestResults();
-                try {
-                    JSONObject testResults = rts.read("/clone", "surefire-reports");
-                    System.out.println("Adding test results to database...");
-                    CIServer.dbh.addTestsToBuild(buildID, testResults);
-                    if(false) {
-                        setCommitStatus(relevant_data, null, "buildFailed", buildID);
-                    }else if (testResults.getBoolean("success")) {
-                        System.out.println("Passed all the tests!!");
-                        setCommitStatus(relevant_data, testResults, "success", buildID);
-                    } else {
-                        System.out.println("All tests did NOT pass.");
-                        setCommitStatus(relevant_data, testResults, "testsFailed", buildID);
+                if (success) {
+                    System.out.println("Fetching the test results...");
+                    ReadTestResults rts = new ReadTestResults();
+                    try {
+                        JSONObject testResults = rts.read("/clone", "surefire-reports");
+                        System.out.println("Adding test results to database...");
+                        CIServer.dbh.addTestsToBuild(buildID, testResults);
+                        if (testResults.getBoolean("success")) {
+                            System.out.println("Passed all the tests!!");
+                            setCommitStatus(relevant_data, testResults, "success", buildID);
+                        } else {
+                            System.out.println("All tests did NOT pass.");
+                            setCommitStatus(relevant_data, testResults, "testsFailed", buildID);
+                        }
+
+                    } catch (ParserConfigurationException e1) {
+                        e1.printStackTrace();
+                        return "failed";
                     }
-
-                } catch (ParserConfigurationException e1) {
-                    e1.printStackTrace();
-                    return "failed";
+                    //tear down the session
+                    try {
+                        tearDown(cloneDirectoryPath);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                        System.out.println("Failed tearDown "+ exception.getMessage());
+                    }
+                    System.out.println("Job finished.");
+                    return "success";
+                } else {
+                    setCommitStatus(relevant_data, null, "buildFailed", buildID);
                 }
-
-                //tear down the session
-                try {
-                    tearDown(cloneDirectoryPath);
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                    System.out.println("Failed tearDown "+ exception.getMessage());
-                }
-                System.out.println("Job finished.");
-                return "success";
             }
+            //tear down the session
+            try {
+                tearDown(cloneDirectoryPath);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+                System.out.println("Failed tearDown "+ exception.getMessage());
+            }
+            System.out.println("Job finished.");
         }
         System.out.println("Job finished.");
         return "failed";

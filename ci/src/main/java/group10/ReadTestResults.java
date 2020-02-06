@@ -25,7 +25,10 @@ public class ReadTestResults {
      * @throws ParserConfigurationException if failing to instanciate DocumentBuilderFactory
      */
     public JSONObject read(String root, String fileName) throws ParserConfigurationException {
+        System.out.println(root);
+        System.out.println(fileName);
         File reportDirectory = p.fileDFS(root, fileName);
+        System.out.println(reportDirectory);
         //Prepare JSONObject to return
         JSONObject json = new JSONObject();
         boolean success = false;

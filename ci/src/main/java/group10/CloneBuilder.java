@@ -30,7 +30,8 @@ public class CloneBuilder {
      */
     public boolean rebuild() {
         this.buildOutput = this.build();
-        if (this.buildOutput.length() < 1)
+        System.out.println(this.buildOutput);
+        if (this.buildOutput.length() > 1)
             return this.checkBuildOutput();
         return false;
     }
@@ -46,11 +47,11 @@ public class CloneBuilder {
         Process p;
         try {
             p = new ProcessBuilder(System.getProperty("user.dir") + "/run.sh", this.path).start();
-            p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             StringBuilder builder = new StringBuilder();
             String line;
             while ( (line = reader.readLine()) != null ) builder.append(line).append(System.getProperty("line.separator"));
+            p.waitFor();
             return builder.toString();
         } catch (IOException | InterruptedException  e) {
             e.printStackTrace();
