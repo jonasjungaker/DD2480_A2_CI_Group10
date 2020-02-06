@@ -38,9 +38,7 @@ public class GithubController {
      * 
      * @param request  from github
      * @param response to send back
-     * @return
-     * @throws IOException
-     * @throws JSONException
+     * @return string "success" if all succeded "failed" otherwise
      */
     public static String handlePost(Request request, Response response) {
         System.out.println("Received a request...");
@@ -57,8 +55,20 @@ public class GithubController {
         try {
             cloned = cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"),
                     cloneDirectoryPath);
-        } catch (JSONException | IOException  e) {
+        } catch (JSONException e) {
             System.out.println("Failed cloning with: " + e.getMessage());
+        }
+        // compile repo
+        // run tests
+        // set commit
+        setCommitStatus("test", "success", relevant_data.get("sha").toString());
+
+        //tear down the session
+        try {
+            tearDown(cloneDirectoryPath);
+        } catch (IOException IOe) {
+            IOe.printStackTrace();
+            System.out.println("Failed tearDown "+ IOe.getMessage());
         }
 
         // only continue if we managed to clone
@@ -105,9 +115,9 @@ public class GithubController {
                 //tear down the session
                 try {
                     tearDown(cloneDirectoryPath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Failed tearDown "+ e.getMessage());
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                    System.out.println("Failed tearDown "+ exception.getMessage());
                 }
                 System.out.println("Job finished.");
                 return "success";
@@ -115,7 +125,7 @@ public class GithubController {
         }
         System.out.println("Job finished.");
         return "failed";
-    };
+    }
 
 
     /**
@@ -153,13 +163,13 @@ public class GithubController {
     }
 
      /**
-     * Clone the given repository & branch from git to the specified file
+     * Clone the given repository and branch from git to the specified file
      * @param url the url of the repository to clone
      * @param branch the branch to clone
      * @param cloneDirectoryPath the file to clone the repo to
      * @return true if cloning was successful
      */
-    public static boolean cloneRepository(String url, String branch, File cloneDirectoryPath) throws IOException {
+    public static boolean cloneRepository(String url, String branch, File cloneDirectoryPath){
         // Set which branch to clone
         ArrayList<String> branches = new ArrayList<>();
         String branchPath = branch;
@@ -186,7 +196,7 @@ public class GithubController {
      * Close the git session
      * Delete the cloned repo
      * @param file the cloned repo
-     * @throws IOException
+     * @throws IOException if deleting directory failed
      */
     public static void tearDown(File file) throws IOException {
         if(git != null){

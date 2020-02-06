@@ -35,7 +35,7 @@ public class CIServer {
      * Parse a HttpServletRequest into JSONObject
      * @param request POST request
      * @return JSONObject parsed request
-     * @throws IOException
+     * @throws IOException if the reader cannot read a line
      */
     public JSONObject parseRequest(HttpServletRequest request) throws IOException {
         BufferedReader reader = request.getReader();

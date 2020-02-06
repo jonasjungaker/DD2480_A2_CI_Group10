@@ -6,7 +6,7 @@ public class FileConfig {
     /**
      * Method that returns the element from a specific row in the config file
      * 
-     * @param test is test name
+     * @param row the row of the wanted element
      * @return element on the row
      */
     public static String getRow(int row) {

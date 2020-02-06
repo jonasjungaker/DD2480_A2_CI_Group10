@@ -27,22 +27,33 @@ public class CloneBuilder {
     }
 
     /**
+<<<<<<< HEAD
      * Builds the project and creates a buildoutput at this.buildOutput Also updates
      * the builddata of the build in order to see if the build and tests were
      * successful
+=======
+     * Builds the project and creates a buildoutput at this.buildOutput
+     * Also updates the builddata of the build in order to see if the build and tests were successful
+     * @return true if rebuild succeded false otherwise
+>>>>>>> docs: fixed javadoc errors #11
      */
     public boolean rebuild() {
         this.buildOutput = this.build();
         if (this.buildOutput.length() < 1)
-            this.checkBuildOutput();
-        return true;
+            return this.checkBuildOutput();
+        return false;
     }
 
     /**
+<<<<<<< HEAD
      * builds a maven project at the designated path
      * 
      * @return a string of the output of the build process for checking with the
      *         checkBuildOutput method
+=======
+     * Builds a maven project at the designated path
+     * @return a string of the output of the build process for checking with the checkBuildOutput method
+>>>>>>> docs: fixed javadoc errors #11
      */
     private String build() {
 
