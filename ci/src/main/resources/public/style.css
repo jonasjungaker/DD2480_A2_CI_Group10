@@ -60,6 +60,11 @@ a {
     color: rgb(99, 97, 253);
 }
 
+h1, h2 {
+    color: rgb(21, 21, 61);
+    margin: 0px;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -94,6 +99,7 @@ a {
     border-radius: 30px;
     padding: 2px 6px;
     margin: 2px;
+    font-weight: 900;
 }
 
 .pending {
@@ -109,4 +115,148 @@ a {
 .passed {
     color: rgba(85, 201, 70, 0.918);
     border-color: rgba(85, 201, 70, 0.918);
+}
+
+.container {
+    border: 1px solid red;
+}
+
+#singe-build-list {
+    width: 100%;
+    margin: 0 auto;
+    table-layout: fixed;
+}
+
+#singe-build-list tr {
+    text-align: center;
+}
+
+#single-list {
+    width: 100%;
+    overflow: auto;
+    margin-top: 28px;
+}
+
+#sidebar {
+    width: 18%;
+    margin-left: 35px;
+    float: left;
+}
+
+#sidebar-header {
+    line-height:60px;
+    overflow: auto;
+    border-bottom: 2px solid rgb(223, 223, 223);
+    margin-bottom: 10px;
+}
+
+#sidebar-header h1 {
+    float: left;
+    text-align: bottom;
+}
+
+#sidebar-header h2 {
+    float: right;
+    text-align: bottom;
+}
+
+#sidebar-main-container h2 {
+    margin-bottom: 5px;
+    font-size: 21px !important;
+    color: rgb(92, 91, 91) !important;
+}
+
+#main-test-container {
+    width: 66%;
+    float: right;
+    margin-right: 35px;
+}
+
+#main-test-container h1 {
+    margin: 13px 0px 5px 0px;
+    font-size: 26px;
+}
+
+.test-container {
+    width: 100%;
+    max-height: 307px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+
+#test-info-container {
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#sidebar-table {
+    width: 100%;
+}
+
+#sidebar-table th {
+    font-weight: bold;
+    border-bottom: none;
+}
+
+/* TABLE STYLES */
+#sidebar-table tr {
+    width: 50%;
+    text-align: left;
+    line-height: 1.5em;
+}
+
+#sidebar-table td {
+    font-size: small;
+    font-weight: 400;
+    border-bottom: none;
+}
+
+#shdow-box {
+    background-color: rgba(0, 0, 0, .4);
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+#test-message-cont {
+    width: 600px;
+    z-index: 300;
+    padding: 20px 20px 22px 20px;
+    background: white;
+    position: relative;
+    top: 80;
+    margin: 0 auto;
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -moz-border-radius: 3px;
+    display: none;
+}
+
+.test-message {
+    display: none;
+}
+
+.view-message-button {
+    font-weight: 900 !important;
+    color: rgb(21, 21, 61);
+}
+
+#test-message-header {
+    margin-bottom: 5px;
+}
+
+.view-message-button:hover {
+    cursor: pointer;
+}
+
+#test-message-cont {
+    display: none;
 }
