@@ -58,7 +58,10 @@ public class ReadTestResults {
                         //If test failed add details of fail
                         if(child != null){
                             number_failed++;
-                            test.put("cause", nodeTestCases.item(i).getTextContent());
+                            String causeString = nodeTestCases.item(i).getTextContent();
+                            int maxLength = (causeString.length() < 190?causeString.length():190);
+                            causeString = causeString.substring(0, maxLength);
+                            test.put("cause", causeString);
                             failed.put(test);                       
                         }else{
                             number_success++;

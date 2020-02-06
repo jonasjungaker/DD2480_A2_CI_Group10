@@ -27,7 +27,9 @@ public class ReadTestResultTest {
         assertEquals(1, json.getInt("number_failed"));
         assertEquals(2, json.getInt("number_success"));
         JSONObject n = (JSONObject) json.getJSONArray("failed").get(0);
-        assertTrue(n.getString("cause").contains("AssertionError"));
+        String cause = n.getString("cause");
+        assertTrue(cause.length() <= 200);
+        assertTrue(cause.contains("AssertionError"));
         assertTrue(n.getString("time").contains("0.005"));
         assertTrue(n.getString("classname").contains("AppTest"));
     }
