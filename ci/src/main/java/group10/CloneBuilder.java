@@ -48,7 +48,7 @@ public class CloneBuilder {
 
         Process p;
         try {
-            p = new ProcessBuilder(System.getProperty("user.dir") + "/ci/run.sh", this.path).start();
+            p = new ProcessBuilder(System.getProperty("user.dir") + "/run.sh", this.path).start();
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             StringBuilder builder = new StringBuilder();

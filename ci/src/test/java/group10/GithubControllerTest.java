@@ -2,9 +2,11 @@ package group10;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.json.JSONException;
+import org.junit.After;
 import org.junit.Test;
 import spark.Request;
 import spark.Response;
@@ -14,8 +16,14 @@ import spark.Response;
  */
 public class GithubControllerTest {
 
+    @After
+    public void tearDown() throws IOException {
+        GithubController.tearDown(new File("clone"));
+    }
+
     /**
-     * Check that the handlePost returns successfully
+     * Check that the handlePost handles when
+     * the repo to clone does not exist.
      * 
      * @throws IOException
      * @throws JSONException
@@ -27,7 +35,7 @@ public class GithubControllerTest {
         Request request = new RequestStub(post);
         Response response = new ResponseStub();
         String s = GithubController.handlePost(request, response);
-        assertTrue( s.equals("success") );
+        assertTrue( s.equals("failed") );
     }
 
     class RequestStub extends Request{

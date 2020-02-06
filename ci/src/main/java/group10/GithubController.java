@@ -66,51 +66,52 @@ public class GithubController {
             System.out.println("Finished cloning repository...");
 
             // set pending statuses
-            setCommitStatus(relevant_data.getString("statuses_url"), "pending", relevant_data.getString("sha"));
-            System.out.println("Saving build in database...");
-            int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
+            boolean exists = setCommitStatus(relevant_data.getString("statuses_url"), "pending", relevant_data.getString("sha"));
+            if (exists) {
+                System.out.println("Saving build in database...");
+                int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
 
+                // build
+                System.out.println("Started building project...");
+                Path p = new Path();
+                File pom = p.fileDFS("/clone", "pom.xml");
+                String dir = pom.getAbsolutePath().replace("pom.xml", "");
+                dir = dir.substring(0, dir.length()-1);
+                CloneBuilder cb = new CloneBuilder(dir);
+                boolean success = cb.rebuild();
+                System.out.println("Finsihed building project...");
+                System.out.println("Build success: " + cb.buildSuccess);
 
-            // build
-            System.out.println("Started building project...");
-            Path p = new Path();
-            File pom = p.fileDFS("/clone", "pom.xml");
-            String dir = pom.getAbsolutePath().replace("pom.xml", "");
-            dir = dir.substring(0, dir.length()-1);
-            CloneBuilder cb = new CloneBuilder(dir);
-            boolean success = cb.rebuild();
-            System.out.println("Finsihed building project...");
-            System.out.println("Build success: " + cb.buildSuccess);
+                // check results
+                System.out.println("Fetching the test results...");
+                ReadTestResults rts = new ReadTestResults();
+                try {
+                    JSONObject testResults = rts.read("/clone", "surefire-reports");
+                    System.out.println("Adding test results to database...");
+                    CIServer.dbh.addTestsToBuild(buildID, testResults);
+                    if (testResults.getBoolean("success")) {
+                        System.out.println("Passed all the tests!!");
+                        setCommitStatus(relevant_data.getString("statuses_url"), "success", relevant_data.getString("sha"));
+                    } else {
+                        System.out.println("All tests did NOT pass.");
+                        setCommitStatus(relevant_data.getString("statuses_url"), "failure", relevant_data.getString("sha"));
+                    }
 
-            // check results
-            System.out.println("Fetching the test results...");
-            ReadTestResults rts = new ReadTestResults();
-            try {
-                JSONObject testResults = rts.read("/clone", "surefire-reports");
-                System.out.println("Adding test results to database...");
-                CIServer.dbh.addTestsToBuild(buildID, testResults);
-                if (testResults.getBoolean("success")) {
-                    System.out.println("Passed all the tests!!");
-                    setCommitStatus(relevant_data.getString("statuses_url"), "success", relevant_data.getString("sha"));
-                } else {
-                    System.out.println("All tests did NOT pass.");
-                    setCommitStatus(relevant_data.getString("statuses_url"), "failure", relevant_data.getString("sha"));
+                } catch (ParserConfigurationException e1) {
+                    e1.printStackTrace();
+                    return "failed";
                 }
 
-            } catch (ParserConfigurationException e1) {
-                e1.printStackTrace();
-                return "failed";
+                //tear down the session
+                try {
+                    tearDown(cloneDirectoryPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Failed tearDown "+ e.getMessage());
+                }
+                System.out.println("Job finished.");
+                return "success";
             }
-
-            //tear down the session
-            try {
-                tearDown(cloneDirectoryPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Failed tearDown "+ e.getMessage());
-            }
-            System.out.println("Job finished.");
-            return "success";
         }
         System.out.println("Job finished.");
         return "failed";
@@ -124,7 +125,7 @@ public class GithubController {
      * @param state is the test result 
      * @param sha is the commit id
      */
-    public static void setCommitStatus(String statuses_url, String state, String sha) {
+    public static boolean setCommitStatus(String statuses_url, String state, String sha) {
         String user = FileConfig.getRow(0);
         String token = FileConfig.getRow(1);
         String url = statuses_url.replace("{sha}", sha);
@@ -144,10 +145,11 @@ public class GithubController {
             wr.close();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             in.close();
+            return true;
         } catch(Exception e) {
             System.out.println("Failed to set commit message: " + e.getMessage());
         }
-        System.out.println();
+        return false;
     }
 
      /**

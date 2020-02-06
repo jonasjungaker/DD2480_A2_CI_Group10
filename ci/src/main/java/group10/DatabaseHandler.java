@@ -58,7 +58,6 @@ public class DatabaseHandler {
                     return (int) generatedKeys.getLong(1);
                 }
             } catch (SQLException e) {
-                //e.printStackTrace();
                 System.out.println("Invalid insert query in addBuild");
             }
         }
@@ -79,7 +78,7 @@ public class DatabaseHandler {
             for (int i = 0; i < failed.length(); i++) {
                 JSONObject result = failed.getJSONObject(i);
                 String name = (String) result.get("name");
-                double elapsed = Double.valueOf(result.getString("time"));
+                double elapsed = result.getDouble("time");
                 String className = (String) result.get("classname");
                 String cause = (String) result.get("cause");
 
@@ -105,7 +104,7 @@ public class DatabaseHandler {
             for (int i = 0; i < passed.length(); i++) {
                 JSONObject result = passed.getJSONObject(i);
                 String name = (String) result.get("name");
-                double elapsed = Double.valueOf(result.getString("time"));
+                double elapsed = result.getDouble("time");
                 String className = (String) result.get("classname");
 
                 try {
@@ -230,7 +229,6 @@ public class DatabaseHandler {
                     test.put("elapsed", rs.getString("elapsed"));
                     test.put("className", rs.getString("class"));
                     String message = rs.getString("message");
-                    System.out.println(message);
                     if (message == null) {
                         passedTests.put(test);
                     } else {
