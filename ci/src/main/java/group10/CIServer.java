@@ -22,6 +22,8 @@ public class CIServer {
         staticFiles.location("/public");
         // this is the end point for displaying list of previous builds
         get(Path.HOME, (req, res) -> WebsiteController.handleGet(req, res));
+        get(Path.BUILD, (req, res) -> WebsiteController.handleGetBuild(req, res));
+
         // this is the github post entrypoint
         post(Path.GITHUB, (req, res) -> GithubController.handlePost(req, res));
 
