@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,13 +66,14 @@ public class GithubController {
         if (cloned) {
             System.out.println("Finished cloning repository...");
 
+            
             // set pending statuses
-            boolean exists = setCommitStatus(relevant_data.getString("statuses_url"), "pending", relevant_data.getString("sha"));
+            boolean exists = setCommitStatus(relevant_data, null, "pending", 0);
             if (exists) {
+                // build
                 System.out.println("Saving build in database...");
                 int buildID = CIServer.dbh.addBuild("pending", relevant_data.getString("author"), relevant_data.getString("ref"));
 
-                // build
                 System.out.println("Started building project...");
                 Path p = new Path();
                 File pom = p.fileDFS("/clone", "pom.xml");
@@ -89,12 +91,14 @@ public class GithubController {
                     JSONObject testResults = rts.read("/clone", "surefire-reports");
                     System.out.println("Adding test results to database...");
                     CIServer.dbh.addTestsToBuild(buildID, testResults);
-                    if (testResults.getBoolean("success")) {
+                    if(!cb.buildSuccess){
+                        setCommitStatus(relevant_data, null, "buildFailed", buildID);
+                    }else if (testResults.getBoolean("success")) {
                         System.out.println("Passed all the tests!!");
-                        setCommitStatus(relevant_data.getString("statuses_url"), "success", relevant_data.getString("sha"));
+                        setCommitStatus(relevant_data, testResults, "success", buildID);
                     } else {
                         System.out.println("All tests did NOT pass.");
-                        setCommitStatus(relevant_data.getString("statuses_url"), "failure", relevant_data.getString("sha"));
+                        setCommitStatus(relevant_data, testResults, "testsFailed", buildID);
                     }
 
                 } catch (ParserConfigurationException e1) {
@@ -125,12 +129,29 @@ public class GithubController {
      * @param state is the test result 
      * @param sha is the commit id
      */
-    public static boolean setCommitStatus(String statuses_url, String state, String sha) {
+    public static boolean setCommitStatus(JSONObject relevant_data, JSONObject testResults, String state, int buildID) {
+        String statuses_url = relevant_data.getString("statuses_url");
+        String sha = relevant_data.getString("sha");
         String user = FileConfig.getRow(0);
         String token = FileConfig.getRow(1);
         String url = statuses_url.replace("{sha}", sha);
-        String json = "{\"state\": \"" + state + "\", \"description\": \"desc\", \"context\": \"G10ci" +
-                    "\", \"target_url\": \"http://johvh.se\"}";
+        String description = "";
+        String target_url = "http://johvh.se/build/"+ buildID;
+
+        if(state.equals("builedFailed")){
+            state = "failure";
+            description = "Failed while building project";
+        }else if(state.equals("testsFailed")){
+            state = "failure";
+            JSONArray failedTests = testResults.getJSONArray("failed");
+            description = "Failed " + failedTests.length() + "tests";
+        }else{
+            state = "success";
+            description = "All tests passed";
+        }
+        
+        String json = "{\"state\": \"" + state + "\", \"description\": \""+ description +"\", \"context\": \"G10ci" +
+                    "\", \"target_url\": \""+ target_url+"\"}";
         
         try {
             URL obj = new URL(url);
