@@ -63,7 +63,6 @@ public class GithubController {
         // only continue if we managed to clone
         if (cloned) {
             System.out.println("Finished cloning repository...");
-            
             // set pending statuses
             boolean exists = setCommitStatus(relevant_data, null, "pending", 0);
             if (exists) {

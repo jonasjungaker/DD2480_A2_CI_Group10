@@ -71,7 +71,7 @@ h1, h2 {
 
 /* Progress bar style */
 .progress-bar {
-    width: 70%;
+    width: 80%;
     border-radius: 10px;
     background-color: rgb(231, 97, 97);
 }

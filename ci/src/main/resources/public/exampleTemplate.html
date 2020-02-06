@@ -1,0 +1,69 @@
+
+
+<html class="gr__"><head>
+    <title>G10ci</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&amp;display=swap" rel="stylesheet"> 
+    </head>
+    
+    <body data-gr-c-s-loaded="true">
+    <!--This is just the top bar with logo-->
+    <div class="top-bar">
+        <div class="logo">
+            <span id="g10">G10</span>
+            <span>ci</span>
+        </div>
+    </div>
+    <!--List of builds-->
+    <div class="list">
+        <h1 class="header">Builds</h1>
+        <table class="build-list">
+            <tbody>
+            <tr>
+                <th>Date</th>
+                <th># Tests</th>
+                <th>Author</th>
+                <th style="width: 30%;">Breakdown</th>
+                <th>Branch</th>
+                <th>Status</th>
+            </tr>
+            <!--Each tr with td inside should be generated in a loop-->
+            #foreach($build in $builds)
+            <tr> 
+                <td><a class="bold" href="/build/$build.buildID">$build.date</a></td>
+                #if ($build.status == "pending") 
+                    <td>-</td>
+                #else
+                    #set($total = ($build.number_passed + $build.number_failed))
+                    <td>$total</td>
+                #end
+                <td> 
+                    <a class="bold">$build.author</a>  
+                </td>
+                <td>
+                    #if ($build.status == "pending") 
+                        -
+                    #else
+                        <div class="progress-bar">
+                            <!--width is completion amount, e.g. 56% of tests passed-->
+                            #if ($build.ratio == 100)
+                                <div class="progress full" style="height:15px;width:$build.ratio%"></div>
+                            #else
+                                <div class="progress" style="height:15px;width:$build.ratio%"></div>
+                            #end
+                        </div>  
+                    #end
+                </td>
+                <td>$build.branch</td>
+                <td>
+                    <span class="status $build.status">$build.status</span>
+                </td> 
+            </tr>
+            #end
+            <!--Ref to build url so that when you click, you
+            get reffered to that pecific build page-->
+          </tbody>
+        </table>
+    </div>
+    </body>
+</html>

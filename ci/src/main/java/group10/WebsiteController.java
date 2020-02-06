@@ -5,24 +5,28 @@ import spark.Response;
 
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONArray;
 
 public class WebsiteController {
 
     /**
      * Handle the Website get event: get info about build history from database
      * return response.
-     * @param request from website to server
+     * 
+     * @param request  from website to server
      * @param response send back info from database
      * @return build history from database
      */
-    public static String handleGet(Request request, Response response) 
-    {
-        Map<String, Object> model = new HashMap<>();
-        //todo: get data from DB
+    public static String handleGet(Request request, Response response) {
+        JSONArray builds = CIServer.dbh.getBuilds(0, 25);
+        Map<String, Object> buildModel = new HashMap<>();
+        buildModel.put("builds", builds);
         
-        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/remakeToTemplate.html"));
+        return new VelocityTemplateEngine().render(new ModelAndView(buildModel, "public/exampleTemplate.html"));
     } 
 
     /**
@@ -39,7 +43,7 @@ public class WebsiteController {
         return new VelocityTemplateEngine().render(new ModelAndView(model, "public/buildPage.html"));
     } 
     
-    public static String render(Map<String, Object> model, String templatePath) {
+    public static String render(JSONArray model, String templatePath) {
         return new VelocityTemplateEngine().render(
             new ModelAndView(model, templatePath)
             );
