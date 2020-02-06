@@ -145,9 +145,12 @@ public class GithubController {
             state = "failure";
             JSONArray failedTests = testResults.getJSONArray("failed");
             description = "Failed " + failedTests.length() + "tests";
-        }else{
+        }else if(state.equals("success")){
             state = "success";
             description = "All tests passed";
+        }else{
+            state = "pending";
+            description = "waiting for result";
         }
         
         String json = "{\"state\": \"" + state + "\", \"description\": \""+ description +"\", \"context\": \"G10ci" +
