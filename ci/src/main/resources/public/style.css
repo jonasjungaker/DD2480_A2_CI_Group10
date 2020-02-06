@@ -132,7 +132,6 @@ h1, h2 {
 
 #single-list {
     width: 100%;
-    min-height: 750px;
     overflow: auto;
     margin-top: 28px;
 }
@@ -173,7 +172,8 @@ h1, h2 {
 }
 
 #main-test-container h1 {
-    margin: 10px 0px 5px 0px;
+    margin: 13px 0px 5px 0px;
+    font-size: 26px;
 }
 
 .test-container {
@@ -181,7 +181,6 @@ h1, h2 {
     max-height: 307px;
     overflow-y: scroll;
     margin-bottom: 30px;
-    /*-webkit-mask-image: -webkit-gradient(linear,left 80%,left bottom,from(black),to(rgba(0,0,0,0)));*/
 }
 
 #test-info-container {
@@ -210,4 +209,53 @@ h1, h2 {
     font-size: small;
     font-weight: 400;
     border-bottom: none;
+}
+
+#shdow-box {
+    background-color: rgba(0, 0, 0, .4);
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+#test-message-cont {
+    width: 600px;
+    z-index: 300;
+    padding: 20px 20px 22px 20px;
+    background: white;
+    position: relative;
+    top: 30;
+    margin: 0 auto;
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -moz-border-radius: 3px;
+    display: none;
+}
+
+.test-message {
+    display: none;
+}
+
+.view-message-button {
+    font-weight: 900 !important;
+    color: rgb(21, 21, 61);
+}
+
+#test-message-header {
+    margin-bottom: 5px;
+}
+
+.view-message-button:hover {
+    cursor: pointer;
+}
+
+#test-message-cont {
+    display: none;
 }
