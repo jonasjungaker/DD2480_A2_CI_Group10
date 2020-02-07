@@ -42,4 +42,5 @@ Java and Maven must be installed to run the program.
 **Emma Olsson**
 -
 Website for displaying builds
-Template for build
+Implemented templates for both build pages
+Code review
