@@ -25,7 +25,11 @@ Java and Maven must be installed to run the program.
 ## Statement of contributions
 
 **Olivia Stigeborn**
--
+- Clone repository functionality
+- Convert test results to JSON format
+- Connect the different parts together
+- Bug fixes
+- Generate API documetation using javadoc
 
 
 **Johan von Hacht**
