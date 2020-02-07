@@ -141,7 +141,7 @@ public class GithubController {
         String token = FileConfig.getRow(1);
         String url = statuses_url.replace("{sha}", sha);
         String description = "";
-        String target_url = "http://johvh.se/build/"+ buildID;
+        String target_url = "http://server.johvh.se/build/"+ buildID;
 
         if(state.equals("buildFailed")){
             state = "failure";
