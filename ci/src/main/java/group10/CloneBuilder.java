@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 
 public class CloneBuilder {
     public String path;
-    public boolean buildSuccess;
-    public boolean testSuccess;
-    public String message;
     public String buildOutput;
 
     /**
@@ -30,7 +27,6 @@ public class CloneBuilder {
      */
     public boolean rebuild() {
         this.buildOutput = this.build();
-        System.out.println(this.buildOutput);
         if (this.buildOutput.length() > 1)
             return this.checkBuildOutput();
         return false;
@@ -67,41 +63,6 @@ public class CloneBuilder {
     public boolean checkBuildOutput()
     {
         // Checking if build was successful
-        if (this.buildOutput.contains("BUILD SUCCESS")){
-            this.buildSuccess = true;
-            this.testSuccess = true;
-            this.message = "Build successful with no errors\n";
-            return true;
-        } 
-        else if (this.buildOutput.contains("COMPILATION ERROR")) {
-            // Finding output error message
-            int beginIndex = this.buildOutput.indexOf("[ERROR] COMPILATION ERROR :");
-            int endIndex = this.buildOutput.indexOf("[INFO] BUILD FAILURE");
-            this.message = "Compilation failure at build-time with errors:\n".concat(this.buildOutput.substring(beginIndex, endIndex));
-            this.buildSuccess = false;
-            this.testSuccess = false;
-            return false;
-        }
-        else if (this.buildOutput.contains("[ERROR] Failures:")) {
-            // Finding output error message
-            int beginIndex = this.buildOutput.indexOf("[ERROR] Failures:");
-            int endIndex = this.buildOutput.indexOf("[INFO] BUILD FAILURE");
-            this.message = "Test failure at build-time with errors:\n".concat(this.buildOutput.substring(beginIndex, endIndex));
-            this.buildSuccess = true;
-            this.testSuccess = false;
-            return false;
-        }
-        else if (this.buildOutput.contains("there is no POM in this directory")) {
-            this.buildSuccess = false;
-            this.testSuccess = false;
-            this.message = "The goal you specified requires a project to execute but there is no POM in this directory\n";
-            return false;
-        }
-        else {
-            this.buildSuccess = false;
-            this.testSuccess = false;
-            this.message = "Unidentified error while building the project\n";
-            return false;
-        }
+        return (this.buildOutput.contains("Failures: 0"));
     }
 }

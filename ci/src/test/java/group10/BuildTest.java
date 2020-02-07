@@ -18,11 +18,10 @@ public class BuildTest
     public void successfulTest()
     {
         CloneBuilder builder = new CloneBuilder("");
-        builder.buildOutput = "building...\nBUILD SUCCESSFUL\nbuilding...\n";
+        builder.buildOutput = "building...\nBUILD SUCCESSFUL\nbuilding...Failures: 0\n";
 
-        builder.checkBuildOutput();
-        assertTrue(builder.buildSuccess);
-        assertTrue(builder.testSuccess);
+        boolean b = builder.checkBuildOutput();
+        assertTrue(b);
     }
 
     /**
@@ -35,23 +34,6 @@ public class BuildTest
         CloneBuilder builder = new CloneBuilder("");
         builder.buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
 
-        builder.checkBuildOutput();
-        assertTrue(builder.buildSuccess);
-        assertFalse(builder.testSuccess);
-    }
-
-    /**
-     * Testing that the builder recognizes a fault in compiling
-     */
-    @Test
-    public void compileFailTest()
-    {
-        String message = "[ERROR] COMPILATION ERROR : \nSome Message with data containing\ninformation about how the test failed\n";
-        CloneBuilder builder = new CloneBuilder("");
-        builder.buildOutput = "building...\n" + message + "[INFO] BUILD FAILURE\nbuilding...\n";
-
-        builder.checkBuildOutput();
-        assertFalse(builder.buildSuccess);
-        assertFalse(builder.testSuccess);
+        assertFalse(builder.checkBuildOutput());
     }
 }
