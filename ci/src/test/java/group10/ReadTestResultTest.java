@@ -25,7 +25,7 @@ public class ReadTestResultTest {
         ReadTestResults rtr = new ReadTestResults();
         JSONObject json = rtr.read("/", "test-results");
         assertEquals(1, json.getInt("number_failed"));
-        assertEquals(2, json.getInt("number_success"));
+        assertEquals(1, json.getInt("number_success"));
         JSONObject n = (JSONObject) json.getJSONArray("failed").get(0);
         String cause = n.getString("cause");
         assertTrue(cause.length() <= 200);
@@ -46,11 +46,11 @@ public class ReadTestResultTest {
         ReadTestResults rtr = new ReadTestResults();
         JSONObject json = rtr.read("/", "test-results-pass");
         assertEquals(0, json.getInt("number_failed"));
-        assertEquals(3, json.getInt("number_success"));
-
+        assertEquals(1, json.getInt("number_success"));
+	
         JSONObject n2 = (JSONObject) json.getJSONArray("succeded").get(0);
-        assertTrue(n2.getString("name").contains("cloneTest"));
-        assertTrue(n2.getString("classname").contains("CloneTest"));
-        assertTrue(n2.getString("time").contains("3.034"));
+        assertTrue(n2.getString("name").contains("shouldAnswerWithTrue"));
+        assertTrue(n2.getString("classname").contains("AppTest"));
+        assertTrue(n2.getString("time").contains("0.005"));
     }
 }
