@@ -27,6 +27,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.Base64;
+import java.util.Random;
 import java.net.URL;
 
 public class GithubController {
@@ -51,7 +52,9 @@ public class GithubController {
 
         // clone repo
         System.out.println("Began cloning repository...");
-        File cloneDirectoryPath = new File("clone/");
+        Random r = new Random();
+        String cloneDir = "clone" + r.nextInt(1000)+ "/";
+        File cloneDirectoryPath = new File(cloneDir);
         boolean cloned = false;
         try {
             cloned = cloneRepository(relevant_data.getString("clone_url"), relevant_data.getString("ref"),
@@ -149,7 +152,7 @@ public class GithubController {
         }else if(state.equals("testsFailed")){
             state = "failure";
             JSONArray failedTests = testResults.getJSONArray("failed");
-            description = "Failed " + failedTests.length() + "tests";
+            description = "Failed " + failedTests.length() + " tests";
         }else if(state.equals("success")){
             state = "success";
             description = "All tests passed";

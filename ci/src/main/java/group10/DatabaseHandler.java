@@ -236,6 +236,7 @@ public class DatabaseHandler {
                     if (message == null) {
                         passedTests.put(test);
                     } else {
+                        test.put("message", message);
                         failedTests.put(test);
                     }
                 }
