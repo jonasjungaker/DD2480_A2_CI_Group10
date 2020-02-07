@@ -11,17 +11,21 @@ public class FileConfig {
      */
     public static String getRow(int row) {
         String line = "";
-        String path = System.getProperty("user.dir") + "/";
+        String path = System.getProperty("user.home") + "/ci/";
+        System.out.println(path+"config.txt");
         int i = -1;
         try {
-            BufferedReader br = new BufferedReader(new FileReader(path+"config.txt"));
+            FileReader fr = new FileReader(path + "config.txt");
+            BufferedReader br = new BufferedReader(fr);
             
             while ((line = br.readLine()) != null && i < row) {
                 if(i == row-1) {
+                    br.close();
                     return line;
                 }
                 i++;
             }
+            br.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
