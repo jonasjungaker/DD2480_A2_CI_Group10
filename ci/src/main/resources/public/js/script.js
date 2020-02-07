@@ -7,9 +7,12 @@ window.onload = function () {
     var messageButton = document.getElementsByClassName("view-message-button");
     var shadowBox = document.getElementById("shdow-box");
 
+    centerPopup();
+
     for(var i = 0; i < messageButton.length; i++) {
-        //Displays a popup box when a button has been clicked
-        messageButton[i].onclick = function(){showBox(this.id)};
+        //Displays a popup box when a button has been clicked 
+        //messageButton[i].onclick = function(){showBox(this.id)};
+        messageButton[i].onclick = function(){showBox(this.children[0])};
     }
 
     //Hides the popup box when the shadow box has been clicked.
@@ -29,11 +32,9 @@ The function bellow displays the popup box
 */
 function showBox(i) {
     var shadowBox = document.getElementById("shdow-box");
-    var messageContainer = document.getElementById("test-message-cont");
-
+    console.log(i.getAttribute('style') );
     shadowBox.setAttribute("style", "visibility: visible;");
-    messageContainer.setAttribute("style", "display: block;");
-    document.getElementById("box"+i).style.display = "block";
+    i.setAttribute("style", i.getAttribute('style') + " visibility: visible;");
 }
 
 /*
@@ -41,11 +42,10 @@ The function hides the popubox
 */
 function hideBox() {
     document.getElementById("shdow-box").setAttribute("style", "visibility: hidden;");
-    document.getElementById("test-message-cont").setAttribute("style", "display: none;");
-    var messageContainers = document.getElementsByClassName("test-message");
+    var textMainContainter = document.getElementsByClassName("test-message-cont");
 
-    for(var i = 0; i < messageContainers.length; i++) {
-        messageContainers[i].style.display = "none";
+    for(var i = 0; i < textMainContainter.length; i++) {
+        textMainContainter[i].style.visibility = "hidden";
     }
 }
 
@@ -66,4 +66,16 @@ The function bellow adds blur to the bottom of box
 */
 function addBlur(box) {
     box.setAttribute('style', '-webkit-mask-image: -webkit-gradient(linear,left 80%,left bottom,from(black),to(rgba(0,0,0,0)))');
+}
+
+/**
+ * Centers the popup box
+ */
+function centerPopup() {
+    var textMainContainter = document.getElementsByClassName("test-message-cont");
+    for(var i = 0; i < textMainContainter.length; i++) {
+        var center = (screen.width - textMainContainter[i].clientWidth) / 2;
+        textMainContainter[i].style.position = "fixed";
+        textMainContainter[i].setAttribute("style", "left: "+center+"px !important;");
+    }
 }
