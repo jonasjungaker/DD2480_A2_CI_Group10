@@ -1,6 +1,8 @@
 # Assignment 2: CI - Group 10
 A minimal continuous integration server that contains the core features of an CI.
 
+Link to builds: http://server.johvh.se/
+
 ## Group members
 - Johan von Hacht (JohanKJIP)
 - Jonas Jungåker (jonasjungaker)
@@ -9,7 +11,7 @@ A minimal continuous integration server that contains the core features of an CI
 - Olivia Stigeborn (seccret)
 ____ 
 ## Task
-The task of assigment 2 was to implement a continuous integration server. The CI should, triggered by a pull request, clone the repository, compile it, run some tests on it and update the status on Github if the tests passed or failed. An in depth description can be found [here](https://kth.instructure.com/courses/17627/assignments/102477?module_item_id=179216) 
+The task of assigment 2 was to implement a continuous integration server. The CI should, triggered by a push event, clone the repository, compile it, run some tests on it and update the status on Github if the tests passed or failed. An in depth description can be found [here](https://kth.instructure.com/courses/17627/assignments/102477?module_item_id=179216) 
 
 ## Installation, compilation and test 
 Java and Maven must be installed to run the program. 
@@ -17,8 +19,14 @@ Java and Maven must be installed to run the program.
 ## Implementations
 
 ### How compilation was implementated and unit-tested
+Compilation was implemented by creating a new process which runs a batch script called `run.sh`. This script moves into the cloned repository in the folder where the `pom.xml` file is located. In this directory it performs the command `mvn install` which downloads the necessary dependencies, compiles the program and executes the tests.
+
+The compilation result was tested, making sure it returns the correct "success" code after compiling, i.e. returns false if compiling failed and true if it succeded.
 
 ### How execution was implementated and unit-tested
+Execution of the tests have already been performed by `mvn install`. However, we get the results from the tests by reading the test result XML files found in the target folder of maven projects. 
+
+This part of the program was tested by copying a few of these XML files into a test folder and making sure that all the test results were read correctly. 
 
 ### How notification was implementated and unit-tested
 The notification system is implemented in two ways. First a status is sent to github of whether the commit contains functional code or not, this showing in there either being a green check mark or a red cross with the commit. The second is a notificatino sent to slack through their incoming webhook API. 
