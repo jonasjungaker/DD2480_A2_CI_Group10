@@ -12,7 +12,6 @@ public class FileConfig {
     public static String getRow(int row) {
         String line = "";
         String path = System.getProperty("user.home") + "/ci/";
-        System.out.println(path+"config.txt");
         int i = -1;
         try {
             FileReader fr = new FileReader(path + "config.txt");
