@@ -21,6 +21,14 @@ Java and Maven must be installed to run the program.
 ### How execution was implementated and unit-tested
 
 ### How notification was implementated and unit-tested
+Notification was implemented using the Github Status api. The CI server sets the commit status by sending a POST request to the api. The POST request containes the following parameters:
+
+* state: The state of the status. Either "failure" or "success"
+* target_url: The target URL to associate with this status. Provides the link for the build output.
+* description: A short description of the status.
+* context: String that differentiates this status from the status of other systems.
+
+The unit-testing consists of 3 tests. The first test createst a status check with the status "success" and expects method "setCommitStatus" to return true (a status has successfully been created). Test 2 createst a status check with the status "failure" and expects the method to also return true. The last test tries to create a status check using an invalid sha and expects the method to return false (faild to create a status check).
 
 ## Statement of contributions
 
