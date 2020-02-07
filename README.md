@@ -41,7 +41,9 @@ Java and Maven must be installed to run the program.
 
 
 **Diego Leon**
--
+- Implemented notification using the Github Status api
+- Created the single build website using html, css, and javascript
+- Code review
 
 **Emma Olsson**
 -
