@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class WebsiteController {
 
@@ -39,8 +40,11 @@ public class WebsiteController {
     {
         Map<String, Object> model = new HashMap<>();
         model.put("buildId", request.params(":buildid"));
+        // this breaks if we try to do /build/dnsjandkj for example.
+        JSONObject build = CIServer.dbh.getBuild(Integer.parseInt(request.params(":buildid")));
+        model.put("build", build);
                 
-        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/buildPage.html"));
+        return new VelocityTemplateEngine().render(new ModelAndView(model, "public/build.html"));
     } 
     
     public static String render(JSONArray model, String templatePath) {
