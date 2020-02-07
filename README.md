@@ -33,8 +33,12 @@ Java and Maven must be installed to run the program.
 
 
 **Johan von Hacht**
--
-
+- Project setup
+- Server setup with ngrok equivalent functionality where `<name>.johvh.se` is a webhook
+- Database and databasehandler
+- Parse Github requests
+- Connect everythihng together
+- Bug fixes
 
 **Jonas Jungåker**
 -
