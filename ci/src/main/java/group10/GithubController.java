@@ -133,9 +133,12 @@ public class GithubController {
     /**
      * Method that sends pass and fail for the build results.
      * 
-     * @param test is test name
-     * @param state is the test result 
-     * @param sha is the commit id
+     * @param relevant_data data with with statuses url and commit id
+     * @param testResults the results from the tests
+     * @param state is either "success", "buildFailed" or "testsFailed" depending on 
+     * the status
+     * @param buildID the id of the  build
+     * @return true if setting commit status succeded
      */
     public static boolean setCommitStatus(JSONObject relevant_data, JSONObject testResults, String state, int buildID) {
         String statuses_url = relevant_data.getString("statuses_url");

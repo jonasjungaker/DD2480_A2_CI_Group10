@@ -9,6 +9,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 
+/**
+ * Test that setting the commit status in github 
+ * works correctly
+ */
 public class NotificationStatusTest
 {
     String url = "https://api.github.com/repos/jonasjungaker/DD2480_A2_CI_Group10/statuses/{sha}";
