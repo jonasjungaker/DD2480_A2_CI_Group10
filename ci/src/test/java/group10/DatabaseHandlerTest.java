@@ -151,7 +151,7 @@ public class DatabaseHandlerTest {
             buildIds.add(buildID);
 
             builds = dbh.getBuilds(0, 2);
-            assertEquals(2, builds.length());
+            assertEquals(5, builds.length());
             build = (JSONObject) builds.get(1);
             assertEquals("pepega", build.getString("author"));
         } 
