@@ -37,7 +37,8 @@ Java and Maven must be installed to run the program.
 
 
 **Jonas Jungåker**
--
+- Compile build and generate reports from clone
+- Slack notifications
 
 
 **Diego Leon**
