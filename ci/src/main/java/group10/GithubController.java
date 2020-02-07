@@ -149,7 +149,7 @@ public class GithubController {
         }else if(state.equals("testsFailed")){
             state = "failure";
             JSONArray failedTests = testResults.getJSONArray("failed");
-            description = "Failed " + failedTests.length() + "tests";
+            description = "Failed " + failedTests.length() + " tests";
         }else if(state.equals("success")){
             state = "success";
             description = "All tests passed";
