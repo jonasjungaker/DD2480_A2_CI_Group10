@@ -11,7 +11,7 @@ public class FileConfig {
      */
     public static String getRow(int row) {
         String line = "";
-        String path = System.getProperty("user.dir") + "/";
+        String path = System.getProperty("user.dir") + "/../../";
         int i = -1;
         try {
             BufferedReader br = new BufferedReader(new FileReader(path+"config.txt"));
